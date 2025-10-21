@@ -1,0 +1,58 @@
+<div class="flex flex-col min-h-screen bg-gray-50">
+
+    <div class="flex flex-col p-6 border-b border-gray-300 bg-gray-100 sm:px-8 flex-none">
+        <div class="w-full flex justify-between items-start mb-6">
+            <div class="flex flex-col">
+                <h1 class="text-2xl text-orange-600 font-extrabold">LIZVI VENTAS</h1>
+            </div>
+            <button class="h-10 px-4 py-2 text-white bg-red-600 rounded-full text-sm font-semibold hover:bg-red-700 transition duration-150 shadow-md">
+                Salir
+            </button>
+        </div>
+
+        <div class="flex flex-col items-center pt-2 pb-4">
+            <div class="h-24 w-24 bg-orange-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                <svg class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h2 class="font-bold text-2xl text-gray-800">Davis Junior</h2>
+            <span class="text-sm text-gray-600 mt-1">Administrador</span>
+        </div>
+    </div>
+
+    <div class="w-full bg-white p-6 sm:p-8 flex-grow flex md:items-center md:justify-center">
+
+        <div class="w-full max-w-xl">
+            <ul class="grid grid-cols-2 gap-5">
+                <li class="col-span-2">
+                    <a (click)="irVentas()"
+                        class="w-full h-32 flex flex-col justify-center items-center bg-orange-600 text-white rounded-2xl shadow-xl hover:bg-orange-700 transition duration-200 transform hover:scale-[1.01] cursor-pointer"
+                    >
+                        <span class="text-3xl font-extrabold tracking-wide">VENDER</span>
+                    </a>
+                </li>
+
+                <li class="col-span-1">
+                    <a href="/inventario"
+                        class="w-full h-32 flex flex-col justify-center items-center bg-white text-gray-700 border-2 border-orange-500 rounded-2xl shadow-lg hover:bg-orange-50 transition duration-200 transform hover:shadow-xl cursor-pointer"
+                    >
+                        <span class="text-lg font-semibold">Inventario</span>
+                    </a>
+                </li>
+
+                <li class="col-span-1">
+                    <a (click)="irConfiguraciones()"
+                        class="w-full h-32 flex flex-col justify-center items-center bg-white text-gray-700 border-2 border-orange-500 rounded-2xl shadow-lg hover:bg-orange-50 transition duration-200 transform hover:shadow-xl cursor-pointer"
+                    >
+                        <span class="text-lg font-semibold">Configurar</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="w-full bg-white p-4 text-center border-t border-gray-100 flex-none">
+        <span class="text-xs text-gray-400">Versión V1.0.0</span>
+    </div>
+</div>

@@ -1,0 +1,237 @@
+<div class="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-8">
+
+    <div class="flex items-center justify-between pb-6 border-b border-gray-300 flex-none">
+        <div class="flex items-center gap-4">
+            <button class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l4 4" /><path d="M5 12l4 -4" /></svg>
+            </button>
+            <h1 class="text-3xl font-extrabold text-gray-900">Configuraciones del Sistema</h1>
+        </div>
+    </div>
+
+    <div class="mt-8 border-b border-gray-200 sticky top-0 bg-gray-50 z-10">
+        <nav class="flex overflow-x-auto space-x-4 sm:space-x-6">
+
+            <button type="button" class="py-3 px-1 border-b-2 font-semibold text-base whitespace-nowrap transition duration-150"
+               [ngClass]="{
+                   'border-orange-600 text-orange-600': activeTab === 'general',
+                   'border-transparent text-gray-500 hover:text-orange-600 hover:border-orange-300': activeTab !== 'general'
+               }"
+               (click)="setActiveTab('general')">
+                General
+            </button>
+
+            <button type="button" class="py-3 px-1 border-b-2 font-semibold text-base whitespace-nowrap transition duration-150"
+               [ngClass]="{
+                   'border-orange-600 text-orange-600': activeTab === 'catalogos',
+                   'border-transparent text-gray-500 hover:text-orange-600 hover:border-orange-300': activeTab !== 'catalogos'
+               }"
+               (click)="setActiveTab('catalogos')">
+                Catálogos
+            </button>
+
+            <button type="button" class="py-3 px-1 border-b-2 font-semibold text-base whitespace-nowrap transition duration-150"
+               [ngClass]="{
+                   'border-orange-600 text-orange-600': activeTab === 'usuarios',
+                   'border-transparent text-gray-500 hover:text-orange-600 hover:border-orange-300': activeTab !== 'usuarios'
+               }"
+               (click)="setActiveTab('usuarios')">
+                Usuarios
+            </button>
+
+            <button type="button" class="py-3 px-1 border-b-2 font-semibold text-base whitespace-nowrap transition duration-150"
+               [ngClass]="{
+                   'border-orange-600 text-orange-600': activeTab === 'sistema',
+                   'border-transparent text-gray-500 hover:text-orange-600 hover:border-orange-300': activeTab !== 'sistema'
+               }"
+               (click)="setActiveTab('sistema')">
+                Sistema
+            </button>
+        </nav>
+    </div>
+
+    <div class="mt-8 flex-grow">
+
+        <div *ngIf="activeTab === 'general'" class="bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Configuración General y TPV</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <button (click)="goToManagement('unidades')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Unidades de Medida</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Gestionar Kg, Lt, UND, etc.</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('monedas')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.765a2 2 0 011.897 2.765L19 14h-4zm0 0v1h-1a2 2 0 01-1-1v-1a2 2 0 01-1-1v-1a2 2 0 011-1h1V8m1 11h-4m-4-7V8m0 4v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7h4z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Moneda Local</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Definir Soles (PEN) o Dólares (USD).</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('impuestos')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 0v10m0-10l-4-4m4 4l-4 4m0 0l-4-4m4 4v10M9 7l4 4m-4 4v-4m4-4H9" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Impuestos y Timbres</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Ajustar tasas de IGV/IVA/Impuestos.</p>
+                    </div>
+                </button>
+
+                 <button (click)="goToManagement('tpv')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM12 4.5v15m0-15l-4-4m4 4l4-4m-4 4h4m-4-4H8m-4 4h4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Configuración TPV</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Ajustes de tickets, impresora y cierres.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 'catalogos'" class="bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Gestión de Catálogos (Inventario)</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <button (click)="goToManagement('productos')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7L4 7m16 4L4 4m16 10H4m16 4H4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Productos</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Listar, crear y editar artículos del inventario.</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('familias')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Familias</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Definir grupos principales (ej: Bebidas, Ropa).</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('subfamilias')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 4h12a2 2 0 012 2v10a2 2 0 01-2 2h-12a2 2 0 01-2-2V6a2 2 0 012-2z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Subfamilias</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Clasificaciones secundarias (ej: Laptops, Camisetas).</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('proveedores')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-1.5a4.5 4.5 0 01-9 0H7M5 10a7 7 0 0114 0v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Proveedores</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Listar y gestionar contactos de suministros.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 'usuarios'" class="bg-white p-6 rounded-lg shadow-xl">
+             <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Administración de Personal y Seguridad</h2>
+
+             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <button (click)="goToManagement('gestion-usuarios')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Gestionar Usuarios</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Crear, editar o desactivar cuentas de empleados.</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('roles')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m-3-3h6m8-4a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Roles y Permisos</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Definir acceso y límites por rol (ej: Cajero, Admin).</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('historial-actividad')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Historial de Actividad</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Auditar acciones del sistema por usuario y fecha.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 'sistema'" class="bg-white p-6 rounded-lg shadow-xl">
+             <h2 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">Mantenimiento y Operaciones</h2>
+
+             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <button (click)="goToManagement('backup')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Copia de Seguridad (Backup)</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Generar, restaurar o programar copias de la base de datos.</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('importar-exportar')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 13v-2.5A2.5 2.5 0 0110.5 8H13V6H8m12 0H10.5a2.5 2.5 0 00-2.5 2.5V13M4 6v12h16V6H4z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Importar / Exportar Datos</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Mover productos, clientes o inventario vía CSV/Excel.</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('licencia')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1.5m-1.5 0h1.5m1.5 0v-4.5M12 8a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Licencia y Versión</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Verificar estado de licencia y detalles de la versión V1.0.0.</p>
+                    </div>
+                </button>
+             </div>
+        </div>
+    </div>
+</div>

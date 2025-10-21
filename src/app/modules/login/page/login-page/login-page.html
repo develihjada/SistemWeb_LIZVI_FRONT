@@ -1,0 +1,62 @@
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6">
+
+    <div class="w-full max-w-md bg-gray-200 rounded-xl shadow-2xl p-6 sm:p-8 lg:p-10">
+
+        <div class="text-center mb-8 sm:mb-10">
+            <div class="mx-auto h-16 w-16 bg-orange-600 rounded-full flex items-center justify-center mb-4">
+                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </div>
+
+            <h1 class="text-3xl font-extrabold text-gray-900">
+                Bienvenido/a
+            </h1>
+            <p class="mt-2 text-lg text-orange-600">
+                Inicia sesión en tu sistema de ventas
+            </p>
+        </div>
+
+        <form  class="space-y-6">
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">
+                    Correo Electrónico
+                </label>
+                <div class="mt-1">
+                    <input id="email" name="email" type="text" autocomplete="email" required
+                        class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-600 focus:border-orange-600 sm:text-base transition duration-150 ease-in-out"
+                        placeholder="tu.correo@empresa.com"
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">
+                    Contraseña
+                </label>
+                <div class="mt-1">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                        class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-600 focus:border-orange-600 sm:text-base transition duration-150 ease-in-out"
+                        placeholder="••••••••"
+                    >
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-gray-600 hover:text-orange-600 transition duration-150 ease-in-out">
+                        Olvidé mi contraseña
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button (click)="login()" type="button"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-600 transition duration-150 ease-in-out">
+                    Iniciar Sesión
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
