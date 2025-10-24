@@ -1,5 +1,12 @@
 export class RequestRegistroVenta {
-  idCliente: number = 0;
-  idVendedor: number = 0;
-  productos: { id: number; cantidad: number }[] = [];
+  fechaventa: string = "";
+  idcliente: number = 0;
+  total: number = 0;
+  detalles: DetalleVentaRequest[] = [];
+}
+
+export class DetalleVentaRequest {
+  idproducto: number = 0;
+  cantidad: number = 0;
+  subtotal: number = 0;
 }

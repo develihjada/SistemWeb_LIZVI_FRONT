@@ -1,1 +1,138 @@
-<p>lista-productos-page works!</p>
+<div class="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-8">
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-300 flex-none">
+
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+            <button (click)="volverCatalogos()" class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l4 4" /><path d="M5 12l4 -4" /></svg>
+            </button>
+            <h1 class="text-3xl font-extrabold text-gray-900">Catálogo de Productos</h1>
+        </div>
+
+        <button (click)="registrarProducto()"
+            class="w-full md:w-auto px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Registrar Producto
+        </button>
+    </div>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-md">
+
+        <input
+            type="text"
+            placeholder="Buscar por código, nombre o SKU..."
+            class="w-full sm:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition"
+        />
+
+        <select class="w-full sm:w-1/4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white">
+            <option value="">Filtrar por Familia</option>
+            <option value="1">Electrónica</option>
+            <option value="2">Ropa y Vestido</option>
+        </select>
+
+        <select class="w-full sm:w-1/4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white">
+            <option value="">Filtrar por Subfamilia</option>
+            <option value="10">Laptops</option>
+            <option value="20">Camisetas</option>
+        </select>
+    </div>
+
+    <div class="mt-8 flex-grow overflow-x-auto bg-white rounded-lg shadow-md">
+
+        <!-- Indicador de carga -->
+        <div *ngIf="isLoading" class="p-8 text-center">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+            <p class="mt-2 text-gray-600">Cargando productos...</p>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="p-8 text-center text-red-600 bg-red-50 rounded-lg">
+            <p>{{ errorMessage }}</p>
+            <button (click)="listarProductos()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                Reintentar
+            </button>
+        </div>
+
+        <div class="p-4" *ngIf="!isLoading && !errorMessage">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"></th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Código</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Familia</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Precio Venta</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Stock</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <ng-container *ngIf="productosData$ | async as productosData">
+                     <ng-container *ngFor="let product of productosData$ | async; let i = index">
+                         <tr>
+                        <td class="px-3 py-4 whitespace-nowrap">
+                            <div class="h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 overflow-hidden">
+                                <!-- Mostrar imagen del producto si existe y no ha fallado -->
+                                <img
+                                    *ngIf="product.imagen && !product.imagenError"
+                                    [src]="product.imagen"
+                                    [alt]="product.descripcion"
+                                    class="w-full h-full object-cover rounded-lg"
+                                    (error)="onImageError(product)"
+                                />
+                                <!-- Mostrar SVG por defecto si no hay imagen o ha fallado -->
+                                <svg
+                                    *ngIf="!product.imagen || product.imagenError"
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ product.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">{{ product.descripcion }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">-</td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold text-right">S/ {{ product.precio | number:'1.2-2' }}</td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right"
+                            [ngClass]="{'text-red-600': product.stock < 10, 'text-gray-800': product.stock >= 10}">
+                            {{ product.stock }}
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button (click)="editarProducto(product.id)" class="text-orange-600 hover:text-orange-800 mr-3">Editar</button>
+                            <button (click)="eliminarProducto(product.id)" class="text-red-600 hover:text-red-800">Eliminar</button>
+                        </td>
+                    </tr>
+
+                     </ng-container>
+
+
+                    <tr *ngIf="(productosData.length === 0)">
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">No se encontraron productos en el catálogo.</td>
+                    </tr>
+                  </ng-container>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <ng-container *ngIf="!errorMessage && !isLoading">
+          <div *ngIf="productosData$ | async as productosData" class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center text-sm">
+            <span>{{ productosData.length }} productos</span>
+            <div>
+                <button class="px-3 py-1 border border-gray-300 rounded-l-lg hover:bg-gray-100">Anterior</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-r-lg hover:bg-gray-100">Siguiente</button>
+            </div>
+        </div>
+        </ng-container>
+
+
+
+    </div>
+</div>

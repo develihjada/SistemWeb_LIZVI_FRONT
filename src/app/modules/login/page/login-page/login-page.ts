@@ -9,7 +9,11 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
 
-  private routes = inject(Router)
+  private routes: Router;
+
+  constructor() {
+    this.routes = inject(Router);
+  }
 
   login() {
     console.log("entro a inicio");

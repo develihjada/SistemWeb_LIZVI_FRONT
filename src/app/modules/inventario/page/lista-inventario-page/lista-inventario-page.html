@@ -1,0 +1,106 @@
+<div class="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-8">
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-300 flex-none">
+
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+            <button (click)="volverInicio()" class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l4 4" /><path d="M5 12l4 -4" /></svg>
+            </button>
+            <h1 class="text-3xl font-extrabold text-gray-900">Documentos de Inventario</h1>
+        </div>
+
+        <button (click)="crearNuevoDocumento()"
+            class="w-full md:w-auto px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Nuevo Documento
+        </button>
+    </div>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-md">
+
+        <input
+            type="text"
+            placeholder="Buscar por folio, tipo o referencia..."
+            class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition"
+        />
+
+        <select class="w-full sm:w-1/4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white">
+            <option value="">Todos los Tipos</option>
+            <option value="entrada">Entrada de Almacén</option>
+            <option value="salida">Salida de Almacén</option>
+            <option option="conteo">Conteo Físico</option>
+        </select>
+
+        <button class="w-full sm:w-auto px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition duration-150">
+            Filtrar
+        </button>
+    </div>
+
+    <div class="mt-8 flex-grow overflow-x-auto bg-white rounded-lg shadow-md">
+
+        <div class="p-4">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Folio</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Tipo de Documento</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Fecha Creación</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Estado</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Total Productos</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Ver Detalle</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+
+                    <tr *ngFor="let document of documents">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                            {{ document.folio }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ document.type }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ document.date | date: 'dd/MM/yyyy' }}
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span *ngIf="document.status === 'Completado'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Completado
+                            </span>
+                            <span *ngIf="document.status === 'Pendiente'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Pendiente
+                            </span>
+                            <span *ngIf="document.status === 'Cancelado'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Cancelado
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 text-right">
+                            {{ document.totalItems }}
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button (click)="verDetalle(document.id)" class="text-orange-600 hover:text-orange-800 font-semibold">
+                                Ver Detalle
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="documents.length === 0">
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No se encontraron documentos de inventario.</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center text-sm">
+            <span>Mostrando 1 - {{ documents.length }} de 58 documentos</span>
+            <div>
+                <button class="px-3 py-1 border border-gray-300 rounded-l-lg hover:bg-gray-100">Anterior</button>
+                <button class="px-3 py-1 border border-gray-300 rounded-r-lg hover:bg-gray-100">Siguiente</button>
+            </div>
+        </div>
+
+    </div>
+</div>

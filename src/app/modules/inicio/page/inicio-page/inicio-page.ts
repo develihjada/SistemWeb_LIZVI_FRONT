@@ -9,7 +9,11 @@ import { Component, inject } from '@angular/core';
   styleUrl: './inicio-page.css'
 })
 export class InicioPage {
-  private routes = inject(Router)
+  private routes: Router;
+
+  constructor() {
+    this.routes = inject(Router);
+  }
 
   irVentas() {
     this.routes.navigateByUrl('/registrar-ventas');
@@ -17,5 +21,9 @@ export class InicioPage {
 
   irConfiguraciones() {
     this.routes.navigateByUrl('/configuraciones');
+  }
+
+  irInventario() {
+    this.routes.navigateByUrl('/lista-inventario');
   }
 }

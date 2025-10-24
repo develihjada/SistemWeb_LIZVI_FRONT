@@ -50,7 +50,7 @@
                 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
                   activeTab !== 'familias'
               }"
-              (click)="activeTab = 'familias'"
+              (click)="setActiveTab('familias'); $event.preventDefault()"
             >
               Familias
             </a>
@@ -62,7 +62,7 @@
                 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
                   activeTab !== 'productos'
               }"
-              (click)="activeTab = 'productos'"
+              (click)="setActiveTab('productos'); $event.preventDefault()"
             >
               Productos
             </a>
@@ -70,61 +70,188 @@
         </div>
       </div>
 
+
       <div class="product-content pt-4 flex-grow overflow-y-auto">
         <div
           *ngIf="activeTab === 'familias'"
           class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
         >
+          <!-- Familias de ejemplo -->
           <div
             class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            (click)="setActiveTab('productos')"
           >
             <span class="text-xl font-bold text-gray-700">Electrónica</span>
             <p class="text-sm text-gray-500 mt-1">12 Productos</p>
           </div>
+
+          <div
+            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            (click)="setActiveTab('productos')"
+          >
+            <span class="text-xl font-bold text-gray-700">Ropa</span>
+            <p class="text-sm text-gray-500 mt-1">8 Productos</p>
+          </div>
+
+          <div
+            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            (click)="setActiveTab('productos')"
+          >
+            <span class="text-xl font-bold text-gray-700">Hogar</span>
+            <p class="text-sm text-gray-500 mt-1">15 Productos</p>
+          </div>
+
+          <div
+            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            (click)="setActiveTab('productos')"
+          >
+            <span class="text-xl font-bold text-gray-700">Oficina</span>
+            <p class="text-sm text-gray-500 mt-1">6 Productos</p>
+          </div>
         </div>
 
         <div *ngIf="activeTab === 'productos'">
-          <div
-            class="flex items-center justify-between p-3 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm"
-          >
-            <div>
-              <p class="font-semibold text-lg">Laptop X100</p>
-              <p class="text-sm text-gray-500">Stock: 5</p>
-            </div>
-            <div class="flex items-center">
-              <span class="text-xl font-bold mr-4 text-orange-600">$1,200.00</span>
-              <button
-                class="bg-orange-600 text-white p-2 rounded-full hover:bg-orange-700 transition"
-              >
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-              </button>
-            </div>
+
+          <!-- Indicador de carga -->
+          <div *ngIf="isLoading" class="p-8 text-center">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+            <p class="mt-2 text-gray-600">Cargando productos...</p>
           </div>
+
+          <!-- Mensaje de error -->
+          <div *ngIf="errorMessage" class="p-4 text-center text-red-600 bg-red-50 rounded-lg">
+            <p>{{ errorMessage }}</p>
+            <button (click)="cargarClientes()" class="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+              Reintentar
+            </button>
+          </div>
+
+          <!-- Lista de productos -->
+          <ng-container *ngIf="!isLoading && !errorMessage">
+            <ng-container *ngIf="productosData$ | async as productosData">
+             <div class="flex-grow overflow-y-auto md:h-[calc(100vh-12rem)] lg:h-[calc(100vh-12rem)] p-4 sm:p-6">
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-6">
+
+        <div *ngFor="let product of productosData; let i = index"
+            class="bg-white border border-gray-200 rounded-xl shadow-lg transition duration-200 flex flex-col overflow-hidden cursor-pointer"
+
+            [ngClass]="{
+                'hover:shadow-xl': product.stock > 0,
+                'hover:shadow-lg hover:ring-2 hover:ring-orange-200': product.stock > 0,
+                'opacity-60 cursor-not-allowed grayscale': product.stock <= 0
+            }"
+
+            (click)="product.stock > 0 && agregarAlCarrito(product)"
+            >
+
+            <div class="relative h-28 bg-gray-100 flex items-center justify-center p-2">
+                <!-- Imagen del producto si está disponible y se carga correctamente -->
+                <img
+                    *ngIf="product.imagen && product.imagen.trim() !== '' && !product.imagenError"
+                    [src]="product.imagen"
+                    [alt]="product.descripcion"
+                    class="w-full h-full object-cover rounded-md"
+                    (error)="onImageError(product)"
+                    loading="lazy">
+
+                <!-- Icono por defecto si no hay imagen o falla la carga -->
+                <svg
+                    *ngIf="!product.imagen || product.imagen.trim() === '' || product.imagenError"
+                    class="w-10 h-10 text-gray-400"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span *ngIf="product.stock <= 10 && product.stock > 0"
+                    class="absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded bg-yellow-400 text-yellow-900 shadow-sm">
+                    Stock Bajo
+                </span>
+                <span *ngIf="product.stock <= 0"
+                    class="absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded bg-red-600 text-white shadow-sm">
+                    AGOTADO
+                </span>
+            </div>
+
+            <div class="p-3 flex-grow flex flex-col justify-between">
+                <div>
+                    <p class="font-semibold text-base text-gray-800 line-clamp-2" title="{{ product.producto }}">{{ product.producto }}</p>
+                    <p class="text-xs text-gray-400 mt-1">Código: {{ product.id }}</p>
+                </div>
+
+                <div class="mt-3 flex items-end justify-between">
+                    <div>
+                        <span class="text-xl font-extrabold text-orange-600">S/ {{ product.precio | number:'1.2-2' }}</span>
+                        <p class="text-xs text-gray-500 mt-0.5">Stock: {{ product.stock }}</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        </div>
+
+</div>
+
+
+              <!-- Mensaje si no hay productos -->
+              <div *ngIf="productosData.length === 0" class="p-8 text-center text-gray-500">
+                <p>No hay productos disponibles</p>
+              </div>
+            </ng-container>
+          </ng-container>
+
         </div>
       </div>
     </div>
 
     <div class="hidden md:block md:col-span-1 bg-gray-200 p-4 sm:p-6 flex flex-col h-full">
 
-      <h2 class="text-2xl font-bold text-gray-800 mb-6 flex-none">Carrito de Venta</h2>
+      <div class="flex items-center justify-between mb-6 flex-none">
+        <h2 class="text-2xl font-bold text-gray-800">Carrito de Venta</h2>
+        <button
+          *ngIf="cartItems.length > 0"
+          (click)="limpiarCarrito()"
+          class="flex items-center space-x-1 px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+          title="Limpiar carrito">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          <span>Limpiar</span>
+        </button>
+      </div>
 
       <div class="space-y-4 flex-grow overflow-y-auto md:h-[calc(100vh-16rem)] lg:h-[calc(100vh-16rem)]">
 
+        <!-- Mensaje cuando el carrito está vacío -->
+        <div *ngIf="cartItems.length === 0" class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <p class="text-gray-500 text-lg font-medium">Tu carrito está vacío</p>
+          <p class="text-gray-400 text-sm mt-1">Agrega productos haciendo clic en ellos</p>
+        </div>
+
+        <!-- Items del carrito -->
         <div
             *ngFor="let item of cartItems"
-            class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm">
-          <div>
+            class="flex items-center bg-white p-3 rounded-lg shadow-sm">
+          <div class="flex-grow">
             <p class="font-semibold text-gray-800">{{ item.name }}</p>
-            <p class="text-sm text-gray-600">{{ item.quantity }} x {{ item.price | currency }}</p>
+            <p class="text-sm text-gray-600">{{ item.quantity }} x S/ {{ item.price | number:'1.2-2' }}</p>
           </div>
-          <span class="font-bold text-orange-600">{{ (item.quantity * item.price) | currency }}</span>
+          <div class="flex items-center space-x-3">
+            <span class="font-bold text-orange-600">S/ {{ (item.quantity * item.price) | number:'1.2-2' }}</span>
+            <button
+              (click)="removerDelCarrito(item.id)"
+              class="p-1 hover:bg-red-100 rounded-full transition-colors duration-200 group"
+              title="Remover producto">
+              <svg class="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors duration-200"
+                   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
       </div>
@@ -132,14 +259,17 @@
       <div class="border-t border-gray-300 pt-4 space-y-2 flex-none">
         <div class="flex justify-between font-medium">
           <span>Subtotal:</span>
-          <span>$2,425.00</span>
+          <span>S/ {{ calcularSubtotal() | number:'1.2-2' }}</span>
         </div>
         <div class="flex justify-between font-bold text-2xl">
           <span>TOTAL:</span>
-          <span class="text-orange-600">$2,425.00</span>
+          <span class="text-orange-600">S/ {{ calcularTotal() | number:'1.2-2' }}</span>
         </div>
         <button
+          (click)="finalizarVenta()"
           class="mt-4 w-full py-4 bg-orange-600 text-white text-lg font-bold rounded-lg shadow-xl hover:bg-orange-700 transition duration-150"
+          [disabled]="cartItems.length === 0"
+          [ngClass]="{ 'opacity-50 cursor-not-allowed': cartItems.length === 0 }"
         >
           Finalizar Venta
         </button>
@@ -153,14 +283,14 @@
     <div class="flex justify-between items-center">
       <div class="text-xl font-bold">
         <span class="text-gray-800">Total:</span>
-        <span class="text-orange-600">$2,425.00</span>
+        <span class="text-orange-600">S/ {{ calcularTotal() | number:'1.2-2' }}</span>
       </div>
 
       <button
         (click)="isCartOpen = true"
         class="flex items-center bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-orange-700 transition"
       >
-        <span class="mr-2">Ver Carrito (3)</span>
+        <span class="mr-2">Ver Carrito ({{ obtenerCantidadItems() }})</span>
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
@@ -177,7 +307,7 @@
 <div
   *ngIf="isCartOpen"
   (click)="isCartOpen = false"
-  class="fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300 md:hidden"
+  class="fixed inset-0 bg-black/50 bg-opacity-50 z-30 transition-opacity duration-300 md:hidden"
 ></div>
 
 <div
@@ -185,10 +315,23 @@
   class="fixed top-0 right-0 h-full w-full max-w-sm bg-gray-200 shadow-2xl z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col "
 >
   <div class="p-4 flex justify-between items-center border-b border-gray-300 bg-white flex-none">
-    <h2 class="text-xl font-bold text-gray-800">Tu Carrito de Venta</h2>
+    <div class="flex items-center space-x-2 flex-grow">
+      <h2 class="text-xl font-bold text-gray-800">Tu Carrito de Venta</h2>
+      <button
+        *ngIf="cartItems.length > 0"
+        (click)="limpiarCarrito()"
+        class="flex items-center space-x-1 px-2 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200"
+        title="Limpiar carrito">
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        <span>Limpiar</span>
+      </button>
+    </div>
     <button
       (click)="isCartOpen = false"
-      class="text-gray-600 hover:text-orange-600 p-2 rounded-full transition"
+      class="text-gray-600 hover:text-orange-600 p-2 rounded-full transition flex-shrink-0"
     >
       <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
@@ -203,32 +346,710 @@
 
   <div class="p-4 space-y-3 overflow-y-auto flex-grow  ">
 
-    <div
-        *ngFor="let item of cartItems"
-        class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm">
-      <div class="flex-grow">
-        <p class="font-semibold text-gray-800">{{ item.name }}</p>
-        <p class="text-sm text-gray-600">{{ item.quantity }} x {{ item.price | currency }}</p>
-      </div>
-      <div class="flex flex-col items-end">
-        <span class="font-bold text-orange-600 mb-1">{{ (item.quantity * item.price) | currency }}</span>
-        <button class="text-red-500 text-xs hover:text-red-700">Remover</button>
-      </div>
+    <!-- Mensaje cuando el carrito está vacío (móvil) -->
+    <div *ngIf="cartItems.length === 0" class="text-center py-8">
+      <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+      <p class="text-gray-500 text-lg font-medium">Tu carrito está vacío</p>
+      <p class="text-gray-400 text-sm mt-1">Agrega productos haciendo clic en ellos</p>
     </div>
 
-  </div>
+    <!-- Items del carrito (móvil) -->
+    <div
+        *ngFor="let item of cartItems"
+        class="flex items-center bg-white p-3 rounded-lg shadow-sm">
+      <div class="flex-grow">
+        <p class="font-semibold text-gray-800">{{ item.name }}</p>
+        <p class="text-sm text-gray-600">{{ item.quantity }} x S/ {{ item.price | number:'1.2-2' }}</p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="font-bold text-orange-600">S/ {{ (item.quantity * item.price) | number:'1.2-2' }}</span>
+        <button
+          (click)="removerDelCarrito(item.id)"
+          class="p-2 hover:bg-red-100 rounded-full transition-colors duration-200 group"
+          title="Remover producto">
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-red-500 transition-colors duration-200"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>  </div>
 
   <div
     class="p-4 border-t border-gray-300 bg-white shadow-inner flex-none"
   >
     <div class="flex justify-between font-bold text-2xl mb-3">
       <span>TOTAL:</span>
-      <span class="text-orange-600">$2,425.00</span>
+      <span class="text-orange-600">S/ {{ calcularTotal() | number:'1.2-2' }}</span>
     </div>
     <button
+      (click)="finalizarVenta()"
       class="w-full py-3 bg-orange-600 text-white text-lg font-bold rounded-lg shadow-xl hover:bg-orange-700 transition duration-150"
+      [disabled]="cartItems.length === 0"
+      [ngClass]="{ 'opacity-50 cursor-not-allowed': cartItems.length === 0 }"
     >
-      Pagar Venta ($2,425.00)
+      Pagar Venta (S/ {{ calcularTotal() | number:'1.2-2' }})
     </button>
+  </div>
+</div>
+
+<!-- Modal de confirmación para limpiar carrito -->
+<div
+  *ngIf="isConfirmClearModalOpen"
+  class="fixed inset-0 bg-black/50 bg-opacity-25 z-50 flex items-center justify-center p-4"
+  (click)="cancelarLimpiarCarrito()">
+
+  <div
+    class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header del modal -->
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Limpiar Carrito</h3>
+          <p class="text-sm text-gray-500 mt-1">Esta acción no se puede deshacer</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-6">
+      <p class="text-gray-700 text-base leading-relaxed">
+        ¿Estás seguro de que deseas limpiar todo el carrito?
+        <span class="font-semibold text-gray-900">Se eliminarán {{ obtenerCantidadItems() }} productos</span>
+        y perderás todos los productos agregados.
+      </p>
+
+      <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-orange-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-orange-800">Total a perder:</p>
+            <p class="text-lg font-bold text-orange-900">S/ {{ calcularTotal() | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones del modal -->
+    <div class="px-6 py-4 bg-gray-50 rounded-b-xl flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+      <button
+        (click)="cancelarLimpiarCarrito()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        Cancelar
+      </button>
+      <button
+        (click)="confirmarLimpiarCarrito()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+        Sí, limpiar carrito
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de datos del cliente -->
+<div
+  *ngIf="isClienteModalOpen"
+  class="fixed inset-0 bg-black/50 bg-opacity-25 z-50 flex items-center justify-center p-4"
+  (click)="cancelarCliente()">
+
+  <div
+    class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 transform transition-all duration-300"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header del modal -->
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0 w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Datos del Cliente</h3>
+          <p class="text-sm text-gray-500 mt-1">Ingresa la información del comprador</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Seleccionar Cliente *
+        </label>
+        <select
+          [(ngModel)]="clienteSeleccionado"
+          (ngModelChange)="onClienteSeleccionado()"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 bg-white">
+          <option value="" disabled selected>Selecciona un cliente</option>
+          <option
+            *ngFor="let cliente of clientes"
+            [value]="cliente.id">
+            {{ cliente.nombres }} {{ cliente.apellidos }}
+          </option>
+        </select>
+
+        <!-- Información del cliente seleccionado -->
+        <div *ngIf="clienteSeleccionado && obtenerNombreClienteSeleccionado()"
+             class="mt-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-orange-900">Cliente seleccionado:</p>
+              <p class="text-sm text-orange-700">{{ obtenerNombreClienteSeleccionado() }}</p>
+              <p class="text-xs text-orange-600">ID: {{ clienteSeleccionado }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opción para agregar cliente nuevo (opcional) -->
+      <div class="border-t border-gray-200 pt-4">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">¿No encuentras el cliente?</span>
+          <button
+            type="button"
+            class="text-sm text-orange-600 hover:text-orange-800 font-medium transition-colors duration-200">
+            Agregar nuevo cliente
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-orange-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-orange-800">Total de la compra:</p>
+            <p class="text-xl font-bold text-orange-900">S/ {{ calcularTotal() | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones del modal -->
+    <div class="px-6 py-4 bg-gray-50 rounded-b-xl flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+      <button
+        (click)="cancelarCliente()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        Cancelar
+      </button>
+      <button
+        (click)="continuarConComprobante()"
+        [disabled]="!clienteSeleccionado"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed': !clienteSeleccionado }"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        Continuar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de selección de comprobante -->
+<div
+  *ngIf="isComprobanteModalOpen"
+  class="fixed inset-0 bg-black/50 bg-opacity-25 z-50 flex items-center justify-center p-4"
+  (click)="cancelarComprobante()">
+
+  <div
+    class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header del modal -->
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Tipo de Comprobante</h3>
+          <p class="text-sm text-gray-500 mt-1">Selecciona el documento que deseas emitir</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-6 space-y-4">
+      <div class="space-y-3">
+        <!-- Opción Boleta -->
+        <div
+          (click)="seleccionarComprobante('boleta')"
+          [ngClass]="{ 'ring-2 ring-orange-500 bg-orange-50': tipoComprobante === 'boleta' }"
+          class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-medium text-gray-900">Boleta de Venta</h4>
+                <p class="text-sm text-gray-500">Para personas naturales</p>
+              </div>
+            </div>
+            <div class="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center"
+                 [ngClass]="{ 'border-orange-500 bg-orange-500': tipoComprobante === 'boleta' }">
+              <div *ngIf="tipoComprobante === 'boleta'" class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opción Factura -->
+        <div
+          (click)="seleccionarComprobante('factura')"
+          [ngClass]="{ 'ring-2 ring-orange-500 bg-orange-50': tipoComprobante === 'factura' }"
+          class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-medium text-gray-900">Factura</h4>
+                <p class="text-sm text-gray-500">Para empresas (RUC requerido)</p>
+              </div>
+            </div>
+            <div class="w-5 h-5 border-2 border-gray-300 rounded-full flex items-center justify-center"
+                 [ngClass]="{ 'border-orange-500 bg-orange-500': tipoComprobante === 'factura' }">
+              <div *ngIf="tipoComprobante === 'factura'" class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="tipoComprobante" class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-blue-800">Número de {{ tipoComprobante }}:</p>
+            <p class="text-lg font-bold text-blue-900">{{ numeroComprobante }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones del modal -->
+    <div class="px-6 py-4 bg-gray-50 rounded-b-xl flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+      <button
+        (click)="cancelarComprobante()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        Cancelar
+      </button>
+      <button
+        (click)="procesarVenta()"
+        [disabled]="!tipoComprobante || isGuardandoVenta"
+        [ngClass]="{
+          'opacity-50 cursor-not-allowed': !tipoComprobante || isGuardandoVenta,
+          'bg-green-600 hover:bg-green-700': ventaGuardadaExitosamente,
+          'bg-orange-600 hover:bg-orange-700': !isGuardandoVenta && !ventaGuardadaExitosamente
+        }"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center space-x-2">
+
+        <!-- Loading spinner -->
+        <svg *ngIf="isGuardandoVenta" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+
+        <!-- Success icon -->
+        <svg *ngIf="ventaGuardadaExitosamente && !isGuardandoVenta" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+
+        <!-- Button text -->
+        <span>
+          {{ isGuardandoVenta ? 'Procesando...' : ventaGuardadaExitosamente ? 'Venta Guardada' : 'Generar Venta' }}
+        </span>
+      </button>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorGuardarVenta" class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+      <div class="flex items-center">
+        <svg class="w-5 h-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-red-700 text-sm font-medium">Error al guardar la venta</p>
+      </div>
+      <p class="text-red-600 text-sm mt-1 ml-7">{{ errorGuardarVenta }}</p>
+      <button
+        (click)="errorGuardarVenta = ''"
+        class="mt-2 ml-7 text-xs text-red-600 hover:text-red-800 underline">
+        Cerrar mensaje
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal del resultado de la venta -->
+<div
+  *ngIf="isResultadoVentaModalOpen"
+  class="fixed inset-0 bg-black/50 bg-opacity-25 z-50 flex items-center justify-center p-4"
+  (click)="cerrarResultadoVenta()">
+
+  <div
+    class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header del modal -->
+    <div class="p-6 border-b border-gray-200"
+         [ngClass]="resultadoVentaResponse?.exito
+           ? 'bg-gradient-to-r from-green-500 to-green-600 text-white rounded-t-xl'
+           : 'bg-gradient-to-r from-red-500 to-red-600 text-white rounded-t-xl'">
+      <div class="flex items-center space-x-3">
+        <div class="flex-shrink-0 w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+          <!-- Icono de éxito -->
+          <svg *ngIf="resultadoVentaResponse?.exito" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <!-- Icono de error -->
+          <svg *ngIf="!resultadoVentaResponse?.exito" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold">
+            {{ resultadoVentaResponse?.exito ? 'Venta Procesada' : 'Error en la Venta' }}
+          </h3>
+          <p class="text-sm opacity-90">
+            {{ resultadoVentaResponse?.exito ? 'La venta se ha guardado correctamente' : 'Ocurrió un problema al procesar la venta' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div class="p-6 space-y-4">
+
+      <!-- Mensaje de éxito -->
+      <div *ngIf="resultadoVentaResponse?.exito" class="text-center space-y-3">
+        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-green-100 rounded-full">
+          <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-gray-900">¡Venta Exitosa!</h4>
+          <p class="text-gray-600 mt-1">
+            {{ resultadoVentaResponse?.mensaje || 'La venta se ha procesado correctamente en el sistema.' }}
+          </p>
+        </div>
+
+        <!-- Detalles de la venta -->
+        <div class="bg-gray-50 p-4 rounded-lg border text-left">
+          <h5 class="text-sm font-medium text-gray-700 mb-2">Resumen de la venta:</h5>
+          <div class="space-y-1 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Cliente:</span>
+              <span class="font-medium">{{ obtenerNombreClienteSeleccionado() || 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Total:</span>
+              <span class="font-medium">S/ {{ calcularTotal().toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Productos:</span>
+              <span class="font-medium">{{ cartItems.length }} {{ cartItems.length === 1 ? 'artículo' : 'artículos' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="!resultadoVentaResponse?.exito" class="text-center space-y-3">
+        <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-100 rounded-full">
+          <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold text-gray-900">Error al Procesar</h4>
+          <p class="text-red-600 mt-1">
+            {{ resultadoVentaResponse?.mensaje || 'No se pudo completar la venta. Por favor, inténtalo nuevamente.' }}
+          </p>
+        </div>
+
+        <!-- Sugerencias para errores -->
+        <div class="bg-red-50 p-4 rounded-lg border border-red-200 text-left">
+          <h5 class="text-sm font-medium text-red-800 mb-2">¿Qué puedes hacer?</h5>
+          <ul class="text-sm text-red-700 space-y-1">
+            <li>• Verificar la conexión a internet</li>
+            <li>• Intentar nuevamente en unos momentos</li>
+            <li>• Contactar al soporte técnico si persiste el problema</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer del modal -->
+    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+      <div class="flex justify-end space-x-3">
+        <button
+          (click)="cerrarResultadoVenta()"
+          [ngClass]="resultadoVentaResponse?.exito
+            ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
+            : 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500'"
+          class="px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200">
+          {{ resultadoVentaResponse?.exito ? 'Continuar' : 'Entendido' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal del comprobante generado -->
+<div
+  *ngIf="isComprobanteGeneradoModalOpen"
+  class="fixed inset-0 bg-black/50 bg-opacity-25 z-50 flex items-center justify-center p-4 py-8"
+  (click)="cerrarComprobanteGenerado()">
+
+  <div
+    class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 max-h-full flex flex-col transform transition-all duration-300"
+    (click)="$event.stopPropagation()">    <!-- Header del comprobante -->
+    <div class="p-6 border-b border-gray-200 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="flex-shrink-0 w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold">{{ tipoComprobante === 'boleta' ? 'BOLETA DE VENTA' : 'FACTURA' }}</h3>
+            <p class="text-orange-100 text-sm">{{ numeroComprobante }}</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-orange-100">Empresa LIZVI</p>
+          <p class="text-xs text-orange-200">RUC: 20123456789</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del comprobante con scroll -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+
+      <!-- Información de la venta -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Fecha de emisión</h4>
+          <p class="text-gray-900 font-medium mt-1">{{ fechaVenta }}</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Hora</h4>
+          <p class="text-gray-900 font-medium mt-1">{{ horaVenta }}</p>
+        </div>
+      </div>
+
+      <!-- Datos del cliente -->
+      <div class="bg-gray-50 p-4 rounded-lg border">
+        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2">Datos del cliente</h4>
+        <div *ngIf="clienteSeleccionado && obtenerClienteSeleccionadoCompleto()" class="space-y-1">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <p class="text-gray-900 font-medium">{{ obtenerNombreClienteSeleccionado() }}</p>
+          </div>
+          <div class="flex items-center space-x-2 ml-6">
+            <svg class="w-3 h-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-4 0H9m4 0h1M9 7h1m-1 4h1m4-4h1m-1 4h1" />
+            </svg>
+            <p class="text-gray-600 text-sm">ID Cliente: {{ clienteSeleccionado }}</p>
+          </div>
+          <div class="flex items-center space-x-2 ml-6">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              Cliente Seleccionado
+            </span>
+          </div>
+        </div>
+        <div *ngIf="!clienteSeleccionado" class="space-y-1">
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <p class="text-gray-500 text-sm italic">Debe seleccionar un cliente antes de continuar</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen de la compra -->
+      <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-medium text-blue-900">Resumen de compra</h4>
+              <p class="text-sm text-blue-600">{{ obtenerCantidadItems() }} productos seleccionados</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-lg font-bold text-blue-900">S/ {{ calcularTotal() | number:'1.2-2' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalle de productos -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Detalle de productos</h4>
+          <span class="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+            {{ cartItems.length }} item{{ cartItems.length !== 1 ? 's' : '' }}
+          </span>
+        </div>
+
+        <!-- Tabla de productos con scroll limitado -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+            <div class="grid grid-cols-12 gap-2 text-xs font-medium text-gray-600 uppercase tracking-wide">
+              <div class="col-span-6">Producto</div>
+              <div class="col-span-2 text-center">Cant.</div>
+              <div class="col-span-2 text-right">Precio</div>
+              <div class="col-span-2 text-right">Total</div>
+            </div>
+          </div>
+
+          <div class="max-h-64 overflow-y-auto bg-white">
+            <div *ngFor="let item of cartItems; let i = index"
+                 class="px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-150"
+                 [ngClass]="{ 'bg-gray-25': i % 2 === 1 }">
+              <div class="grid grid-cols-12 gap-2 items-center">
+                <!-- Nombre del producto -->
+                <div class="col-span-6">
+                  <p class="font-medium text-gray-900 text-sm leading-tight"
+                     [title]="item.name">
+                    {{ item.name.length > 30 ? (item.name | slice:0:30) + '...' : item.name }}
+                  </p>
+                  <p class="text-xs text-gray-500 mt-1">Código: {{ item.id }}</p>
+                </div>
+
+                <!-- Cantidad -->
+                <div class="col-span-2 text-center">
+                  <span class="inline-flex items-center justify-center w-8 h-8 bg-orange-100 text-orange-800 text-sm font-medium rounded-full">
+                    {{ item.quantity }}
+                  </span>
+                </div>
+
+                <!-- Precio unitario -->
+                <div class="col-span-2 text-right">
+                  <p class="text-sm font-medium text-gray-900">S/ {{ item.price | number:'1.2-2' }}</p>
+                </div>
+
+                <!-- Total -->
+                <div class="col-span-2 text-right">
+                  <p class="text-sm font-bold text-orange-600">S/ {{ (item.quantity * item.price) | number:'1.2-2' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicador de scroll si hay muchos items -->
+          <div *ngIf="cartItems.length > 6" class="bg-gray-100 px-4 py-2 text-center">
+            <p class="text-xs text-gray-500">
+              <svg class="w-4 h-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Desliza para ver todos los productos
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Totales -->
+      <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+        <div class="space-y-2">
+          <div class="flex justify-between text-gray-700">
+            <span>Subtotal:</span>
+            <span>S/ {{ calcularSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex justify-between text-gray-700">
+            <span>IGV (18%):</span>
+            <span>S/ {{ (calcularSubtotal() * 0.18) | number:'1.2-2' }}</span>
+          </div>
+          <hr class="border-orange-200">
+          <div class="flex justify-between text-lg font-bold text-orange-900">
+            <span>TOTAL:</span>
+            <span>S/ {{ calcularTotal() | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="text-center text-xs text-gray-500 space-y-1">
+        <p>¡Gracias por su compra!</p>
+        <p>Este comprobante es válido como documento tributario</p>
+        <p>Consultas: ventas@lizvi.com | Tel: (01) 123-4567</p>
+      </div>
+    </div>
+
+    <!-- Botones del modal (fijo en el footer) -->
+    <div class="flex-shrink-0 px-6 py-4 bg-gray-50 rounded-b-xl flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 border-t border-gray-200">
+      <button
+        (click)="cerrarComprobanteGenerado()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Cerrar
+      </button>
+      <button
+        (click)="imprimirComprobante()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+        <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        Imprimir
+      </button>
+      <button
+        (click)="cerrarComprobanteGenerado()"
+        class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors duration-200">
+        <svg class="w-4 h-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Finalizar
+      </button>
+    </div>
   </div>
 </div>

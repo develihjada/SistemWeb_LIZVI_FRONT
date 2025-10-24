@@ -2,7 +2,7 @@
 
     <div class="flex items-center justify-between pb-6 border-b border-gray-300 flex-none">
         <div class="flex items-center gap-4">
-            <button class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
+            <button (click)="volverInicio()" class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l4 4" /><path d="M5 12l4 -4" /></svg>
             </button>
             <h1 class="text-3xl font-extrabold text-gray-900">Configuraciones del Sistema</h1>
@@ -108,7 +108,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-                <button (click)="goToManagement('productos')"
+                <button (click)="goToManagement('lista-productos')"
                     class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
                     <div class="p-3 bg-orange-100 rounded-full flex-none">
                         <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7L4 7m16 4L4 4m16 10H4m16 4H4" /></svg>
@@ -119,7 +119,7 @@
                     </div>
                 </button>
 
-                <button (click)="goToManagement('familias')"
+                <button (click)="goToManagement('lista-familia')"
                     class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
                     <div class="p-3 bg-orange-100 rounded-full flex-none">
                         <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
@@ -130,7 +130,7 @@
                     </div>
                 </button>
 
-                <button (click)="goToManagement('subfamilias')"
+                <button (click)="goToManagement('lista-subfamilia')"
                     class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
                     <div class="p-3 bg-orange-100 rounded-full flex-none">
                         <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14v6m-3-3h6M6 4h12a2 2 0 012 2v10a2 2 0 01-2 2h-12a2 2 0 01-2-2V6a2 2 0 012-2z" /></svg>
@@ -138,6 +138,17 @@
                     <div>
                         <h3 class="text-lg font-bold text-gray-800">Subfamilias</h3>
                         <p class="text-gray-600 mt-1 text-sm">Clasificaciones secundarias (ej: Laptops, Camisetas).</p>
+                    </div>
+                </button>
+
+                <button (click)="goToManagement('lista-clientes')"
+                    class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition duration-150 cursor-pointer border-l-4 border-orange-600 text-left flex items-start space-x-4">
+                    <div class="p-3 bg-orange-100 rounded-full flex-none">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Clientes</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Gestionar base de datos de clientes registrados.</p>
                     </div>
                 </button>
 

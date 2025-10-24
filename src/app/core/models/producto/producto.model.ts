@@ -8,4 +8,6 @@ export class ProductoModel {
 	idunidadmedida: number = 0;
 	idmarca: number = 0;
 	estado: number = 0;
+	imagen: string = "";
+	imagenError?: boolean = false;
 }

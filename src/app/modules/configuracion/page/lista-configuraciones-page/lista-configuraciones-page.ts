@@ -1,5 +1,6 @@
 import { CommonModule, Location, NgClass } from '@angular/common';
 import { Component, ElementRef, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-configuraciones-page',
@@ -10,23 +11,40 @@ import { Component, ElementRef, inject } from '@angular/core';
 export class ListaConfiguracionesPage {
  activeTab: 'general' | 'catalogos' | 'usuarios' | 'sistema' = 'general';
 
+  private location: Location;
+  private router: Router;
 
-   private location = inject(Location);
-
-  constructor(private el: ElementRef ) { }
+  constructor(private el: ElementRef) {
+    this.location = inject(Location);
+    this.router = inject(Router);
+  }
 
   ngOnInit(): void {
   }
 
-  // Método CRUCIAL que se llama al hacer clic en las pestañas para cambiar el contenido.
   setActiveTab(tabName: 'general' | 'catalogos' | 'usuarios' | 'sistema'): void {
     this.activeTab = tabName;
-
-    // (Lógica de scrollIntoView omitida aquí para concisión, pero funcional en el TS anterior)
   }
 
   goToManagement(module: string): void {
-    console.log(`Simulando navegación a la gestión de: ${module}`);
+    // Manejar rutas específicas para diferentes módulos
+    switch (module) {
+      case 'lista-clientes':
+        this.router.navigate(['/cliente/lista-clientes']);
+        break;
+      case 'lista-productos':
+        this.router.navigate(['/lista-productos']);
+        break;
+      case 'lista-familia':
+        this.router.navigate(['/lista-familia']);
+        break;
+      case 'lista-subfamilia':
+        this.router.navigate(['/lista-subfamilia']);
+        break;
+      default:
+        this.router.navigate([`/${module}`]);
+        break;
+    }
   }
 
   volverInicio(): void {
