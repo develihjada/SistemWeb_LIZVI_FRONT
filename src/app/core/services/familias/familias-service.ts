@@ -13,8 +13,6 @@ export class FamiliasService {
 
   listaFamilias(req: RequestListaFamiliasModel): Observable<ResponseListaFamilias> {
     const fullUrl = `${this.url}/Familias/Mostrar`;
-    console.log('🌐 FamiliasService - Haciendo petición a:', fullUrl);
-    console.log('📦 FamiliasService - Payload:', req);
 
     return this.http.post<ResponseListaFamilias>(fullUrl, req, {
       headers: { 'Content-Type': 'application/json' },
