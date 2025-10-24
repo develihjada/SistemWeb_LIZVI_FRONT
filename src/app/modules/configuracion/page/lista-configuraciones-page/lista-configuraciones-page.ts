@@ -27,10 +27,9 @@ export class ListaConfiguracionesPage {
   }
 
   goToManagement(module: string): void {
-    // Manejar rutas específicas para diferentes módulos
     switch (module) {
       case 'lista-clientes':
-        this.router.navigate(['/cliente/lista-clientes']);
+        this.router.navigate(['/lista-clientes']);
         break;
       case 'lista-productos':
         this.router.navigate(['/lista-productos']);
@@ -40,6 +39,9 @@ export class ListaConfiguracionesPage {
         break;
       case 'lista-subfamilia':
         this.router.navigate(['/lista-subfamilia']);
+        break;
+      case 'lista-unidad-medida':
+        this.router.navigate(['/lista-unidad-medida']);
         break;
       default:
         this.router.navigate([`/${module}`]);

@@ -1,15 +1,12 @@
 import { Routes } from '@angular/router';
-import { ListaUnidadesMedidaPage } from './page/lista-unidades-medida-page/lista-unidades-medida-page';
 
-export const unidadMedidaRoutes: Routes = [
+export const UNIDADMEDIDA_ROUTES: Routes = [
   {
-    path: '',
-    redirectTo: 'lista',
-    pathMatch: 'full'
-  },
-  {
-    path: 'lista',
-    component: ListaUnidadesMedidaPage,
+    path: 'lista-unidad-medida',
+    loadComponent: () =>
+      import('./page/lista-unidades-medida-page/lista-unidades-medida-page').then(
+        (m) => m.ListaUnidadesMedidaPage
+      ),
     title: 'Unidades de Medida'
   }
 ];

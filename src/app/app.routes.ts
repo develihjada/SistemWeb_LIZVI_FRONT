@@ -7,7 +7,8 @@ import { CONFIGURACIONES_ROUTES } from './modules/configuracion/configuracion.ro
 import { INVENTARIO_ROUTES } from './modules/inventario/inventario.routes';
 import { FAMILIA_ROUTES } from './modules/familia/familia.routes';
 import { SUBFAMILIA_ROUTES } from './modules/subfamilia/subFamilia.routes';
-import { clienteRoutes } from './modules/cliente/cliente.routes';
+import { CLIENTES_ROUTES } from './modules/cliente/cliente.routes';
+import { UNIDADMEDIDA_ROUTES } from './modules/unidadMedida/unidadMedida.routes';
 
 export const routes: Routes = [
   ...LOGIN_ROUTES,
@@ -18,8 +19,6 @@ export const routes: Routes = [
   ...FAMILIA_ROUTES,
   ...SUBFAMILIA_ROUTES,
   ...PRODUCTOS_ROUTES,
-  {
-    path: 'cliente',
-    children: clienteRoutes
-  }
+  ...CLIENTES_ROUTES,
+  ...UNIDADMEDIDA_ROUTES
 ];

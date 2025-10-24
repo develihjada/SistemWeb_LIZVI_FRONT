@@ -1,11 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const clienteRoutes: Routes = [
-  {
-    path: '',
-    redirectTo: 'lista-clientes',
-    pathMatch: 'full'
-  },
+export const CLIENTES_ROUTES: Routes = [
   {
     path: 'lista-clientes',
     loadComponent: () =>
