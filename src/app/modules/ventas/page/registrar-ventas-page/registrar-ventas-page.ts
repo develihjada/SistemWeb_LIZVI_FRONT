@@ -4,13 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { ProductosService } from '../../../../core/services/productos/productos-service';
 import { ClientesService } from '../../../../core/services/clientes/clientes-service';
 import { VentasService } from '../../../../core/services/ventas/ventas-service';
+import { FamiliasService } from '../../../../core/services/familias/familias-service';
+import { SubfamiliasService } from '../../../../core/services/subfamilias/subfamilias-service';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
 import { ProductoModel } from '../../../../core/models/producto/producto.model';
 import { ClienteModel } from '../../../../core/models/cliente/cliente.models';
+import { FamiliaModel } from '../../../../core/models/familia/familia.model';
+import { SubfamiliaModel } from '../../../../core/models/subfamilia/subfamilia.model';
 import { RequestListaProductosModel } from '../../../../core/models/producto/request/listaProductos.request';
+import { RequestListaFamiliasModel } from '../../../../core/models/familia/request/listaFamilias.request';
+import { RequestListaSubfamiliasModel } from '../../../../core/models/subfamilia/request/listaSubfamilias.request';
 import { RequestListaClientesModel } from '../../../../core/models/cliente/request/listaClientes.request';
 import { ResponseListaProductos } from '../../../../core/models/producto/response/listaProductos.response';
 import { ResponseListaClientes } from '../../../../core/models/cliente/response/listaClientes.response';
+import { ResponseListaFamilias } from '../../../../core/models/familia/response/listaFamilias.response';
+import { ResponseListaSubfamilias } from '../../../../core/models/subfamilia/response/listaSubfamilias.response';
 import { RequestRegistroVenta, DetalleVentaRequest } from '../../../../core/models/venta/request/registroVenta.request';
 import { ResponseGeneral } from '../../../../shared/model/general.response';
 
@@ -33,6 +41,8 @@ export class RegistrarVentasPage implements OnInit {
   private api: ProductosService;
   private clientesApi: ClientesService;
   private ventasApi: VentasService;
+  private familiasApi: FamiliasService;
+  private subfamiliasApi: SubfamiliasService;
 
   activeTab: 'familias' | 'productos' = 'familias';
   isCartOpen: boolean = false;
@@ -47,6 +57,13 @@ export class RegistrarVentasPage implements OnInit {
   // Lista de clientes
   clientes: ClienteModel[] = [];
   clienteSeleccionado: number | null = null; // ID del cliente seleccionado
+
+  // Lista de familias
+  familias: FamiliaModel[] = [];
+  familiaSeleccionada: number | null = null; // ID de la familia seleccionada
+
+  // Lista de subfamilias
+  subfamilias: SubfamiliaModel[] = [];
 
   // Datos del cliente y venta (mantener para compatibilidad)
   clienteNombre: string = '';
@@ -71,6 +88,8 @@ export class RegistrarVentasPage implements OnInit {
     this.api = inject(ProductosService);
     this.clientesApi = inject(ClientesService);
     this.ventasApi = inject(VentasService);
+    this.familiasApi = inject(FamiliasService);
+    this.subfamiliasApi = inject(SubfamiliasService);
   }
 
   volverInicio() {
@@ -412,16 +431,25 @@ export class RegistrarVentasPage implements OnInit {
   private productosSubject = new BehaviorSubject<ProductoModel[]>([]);
   productosData$: Observable<ProductoModel[]> = this.productosSubject.asObservable();
 
+  // Datos de familias
+  private familiasSubject = new BehaviorSubject<FamiliaModel[]>([]);
+  familiasData$: Observable<FamiliaModel[]> = this.familiasSubject.asObservable();
+
+  // Mantener todos los productos sin filtrar
+  private todosLosProductos: ProductoModel[] = [];
+
   ngOnInit(): void {
     this.listarProductos();
     this.cargarClientes();
+    this.cargarFamilias();
+    this.cargarSubfamilias();
   }
 
   listarProductos() {
       this.errorMessage = null;
       this.isLoading = true;
 
-      const EstadoFiltro: RequestListaProductosModel = { estado: 2 };
+      const EstadoFiltro: RequestListaProductosModel = { estado: 2, idfamilia: 0, idsubfamilia: 0 };
 
       const api$ = this.api.listaProductos(EstadoFiltro).pipe(
         timeout({ each: 7000 }),
@@ -446,6 +474,7 @@ export class RegistrarVentasPage implements OnInit {
             toPush = [];
           }
 
+          this.todosLosProductos = [...toPush]; // Guardar copia de todos los productos
           this.productosSubject.next(toPush);
           this.initialLoadDone = true;
         },
@@ -479,7 +508,74 @@ export class RegistrarVentasPage implements OnInit {
     });
   }
 
-  // Método para obtener el nombre completo del cliente seleccionado
+  cargarFamilias() {
+    const EstadoFiltro: RequestListaFamiliasModel = { estado: 1 };
+
+    this.familiasApi.listaFamilias(EstadoFiltro).pipe(
+      timeout({ each: 7000 }),
+      map((response: ResponseListaFamilias) => {
+        return response.exito ? response.familia : [];
+      }),
+      catchError((err) => {
+        return of([] as FamiliaModel[]);
+      })
+    ).subscribe({
+      next: (familias: FamiliaModel[]) => {
+        this.familias = familias;
+        this.familiasSubject.next(familias);
+      },
+      error: (err) => {
+        // Error al cargar familias
+      }
+    });
+  }
+
+  cargarSubfamilias() {
+    const EstadoFiltro: RequestListaSubfamiliasModel = { estado: 1, idfamilia: 0 };
+
+    this.subfamiliasApi.listaSubfamilias(EstadoFiltro).pipe(
+      timeout({ each: 7000 }),
+      map((response: ResponseListaSubfamilias) => {
+        return response.exito ? response.subFamilia : [];
+      }),
+      catchError((err) => {
+        return of([] as SubfamiliaModel[]);
+      })
+    ).subscribe({
+      next: (subfamilias: SubfamiliaModel[]) => {
+        this.subfamilias = subfamilias;
+      },
+      error: (err) => {
+        // Error al cargar subfamilias
+      }
+    });
+  }
+
+  // Método para filtrar productos por familia
+  filtrarProductosPorFamilia(familiaId: number | null) {
+    this.familiaSeleccionada = familiaId;
+
+    if (!familiaId) {
+      // Si no hay familia seleccionada, mostrar todos los productos
+      this.productosSubject.next(this.todosLosProductos);
+    } else {
+      // Obtener las subfamilias que pertenecen a la familia seleccionada
+      const subfamiliasIds = this.subfamilias
+        .filter(subfamilia => subfamilia.familia === familiaId)
+        .map(subfamilia => subfamilia.id);
+
+      if (subfamiliasIds.length === 0) {
+        // Si no hay subfamilias para esta familia, mostrar array vacío
+        this.productosSubject.next([]);
+      } else {
+        // Filtrar productos por subfamilias desde todos los productos
+        const productosFiltrados = this.todosLosProductos.filter(producto =>
+          subfamiliasIds.includes(producto.idsubfamilia)
+        );
+        this.productosSubject.next(productosFiltrados);
+      }
+    }
+  }  // Método para obtener el nombre completo del cliente seleccionado
   obtenerNombreClienteSeleccionado(): string {
     if (!this.clienteSeleccionado) return '';
     // Convertir a número para comparar correctamente

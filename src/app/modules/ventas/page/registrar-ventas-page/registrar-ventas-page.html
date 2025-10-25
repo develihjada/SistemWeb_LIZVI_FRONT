@@ -76,37 +76,43 @@
           *ngIf="activeTab === 'familias'"
           class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
         >
-          <!-- Familias de ejemplo -->
+          <!-- Opción para mostrar todos los productos -->
           <div
             class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
-            (click)="setActiveTab('productos')"
+            [ngClass]="{
+              'bg-orange-100 ring-2 ring-orange-600': familiaSeleccionada === null,
+              'bg-gray-200': familiaSeleccionada !== null
+            }"
+            (click)="filtrarProductosPorFamilia(null); setActiveTab('productos')"
           >
-            <span class="text-xl font-bold text-gray-700">Electrónica</span>
-            <p class="text-sm text-gray-500 mt-1">12 Productos</p>
+            <span class="text-xl font-bold text-gray-700">Todos</span>
+            <p class="text-sm text-gray-500 mt-1">Ver todos los productos</p>
           </div>
 
+          <!-- Lista dinámica de familias -->
           <div
+            *ngFor="let familia of familias"
             class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
-            (click)="setActiveTab('productos')"
+            [ngClass]="{
+              'bg-orange-100 ring-2 ring-orange-600': familiaSeleccionada === familia.id,
+              'bg-gray-200': familiaSeleccionada !== familia.id
+            }"
+            (click)="filtrarProductosPorFamilia(familia.id); setActiveTab('productos')"
           >
-            <span class="text-xl font-bold text-gray-700">Ropa</span>
-            <p class="text-sm text-gray-500 mt-1">8 Productos</p>
+            <span class="text-xl font-bold text-gray-700">{{ familia.descripcion }}</span>
+            <p class="text-sm text-gray-500 mt-1">Filtrar productos</p>
           </div>
 
+          <!-- Mensaje cuando no hay familias -->
           <div
-            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
-            (click)="setActiveTab('productos')"
+            *ngIf="familias.length === 0"
+            class="col-span-full text-center p-8 text-gray-500"
           >
-            <span class="text-xl font-bold text-gray-700">Hogar</span>
-            <p class="text-sm text-gray-500 mt-1">15 Productos</p>
-          </div>
-
-          <div
-            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
-            (click)="setActiveTab('productos')"
-          >
-            <span class="text-xl font-bold text-gray-700">Oficina</span>
-            <p class="text-sm text-gray-500 mt-1">6 Productos</p>
+            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.712-3.714M14 40v-4a9.971 9.971 0 01.712-3.714M28 16a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay familias disponibles</h3>
+            <p class="mt-1 text-sm text-gray-500">Las familias de productos aparecerán aquí cuando estén disponibles.</p>
           </div>
         </div>
 
