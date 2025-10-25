@@ -1,3 +1,3 @@
 export class RequestListaFamiliasModel {
-  estado: number = 1;
+  estado: number = 0;
 }

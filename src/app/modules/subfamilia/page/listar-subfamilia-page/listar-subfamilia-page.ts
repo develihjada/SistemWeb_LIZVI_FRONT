@@ -43,7 +43,7 @@ export class ListarSubfamiliaPage implements OnInit {
     const api$ = this.api.listaSubfamilias(EstadoFiltro).pipe(
       timeout({ each: 7000 }),
       map((response: ResponseListaSubfamilias) => {
-        return response.exito ? response.subfamilias : [];
+        return response.exito ? response.subFamilia : [];
       }),
       catchError((err) => {
         this.errorMessage = 'No se pudo conectar al servidor. Revisa tu red o inténtalo más tarde.';

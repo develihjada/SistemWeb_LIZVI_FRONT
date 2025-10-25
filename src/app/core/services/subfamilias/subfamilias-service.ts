@@ -12,7 +12,7 @@ export class SubfamiliasService {
   private url = environment.api;
 
   listaSubfamilias(req: RequestListaSubfamiliasModel): Observable<ResponseListaSubfamilias> {
-    const fullUrl = `${this.url}/Subfamilias/Mostrar`;
+    const fullUrl = `${this.url}/SubFamilia/Mostrar`;
 
     return this.http.post<ResponseListaSubfamilias>(fullUrl, req, {
       headers: { 'Content-Type': 'application/json' },

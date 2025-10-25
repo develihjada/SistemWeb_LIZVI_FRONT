@@ -12,7 +12,7 @@ export class FamiliasService {
   private url = environment.api;
 
   listaFamilias(req: RequestListaFamiliasModel): Observable<ResponseListaFamilias> {
-    const fullUrl = `${this.url}/Familias/Mostrar`;
+    const fullUrl = `${this.url}/Familia/Mostrar`;
 
     return this.http.post<ResponseListaFamilias>(fullUrl, req, {
       headers: { 'Content-Type': 'application/json' },

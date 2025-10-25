@@ -12,7 +12,7 @@ export class UnidadesMedidaService {
   private url = environment.api;
 
   listaUnidadesMedida(req: RequestListaUnidadesMedidaModel): Observable<ResponseListaUnidadesMedida> {
-    const fullUrl = `${this.url}/UnidadesMedida/Mostrar`;
+    const fullUrl = `${this.url}/UnidadMedida/Mostrar`;
 
     return this.http.post<ResponseListaUnidadesMedida>(fullUrl, req, {
       headers: { 'Content-Type': 'application/json' },

@@ -44,7 +44,7 @@ export class ListaFamiliaPage implements OnInit {
     const api$ = this.api.listaFamilias(EstadoFiltro).pipe(
       timeout({ each: 7000 }),
       map((response: ResponseListaFamilias) => {
-        return response.exito ? response.familias : [];
+        return response.exito ? response.familia : [];
       }),
       catchError((err) => {
         this.errorMessage = 'No se pudo conectar al servidor. Revisa tu red o inténtalo más tarde.';
@@ -62,7 +62,6 @@ export class ListaFamiliaPage implements OnInit {
         } else {
           toPush = [];
         }
-
         this.familiasSubject.next(toPush);
         this.initialLoadDone = true;
       },

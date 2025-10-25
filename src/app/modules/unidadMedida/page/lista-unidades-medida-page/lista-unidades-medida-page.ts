@@ -44,7 +44,7 @@ export class ListaUnidadesMedidaPage implements OnInit {
     const api$ = this.api.listaUnidadesMedida(EstadoFiltro).pipe(
       timeout({ each: 7000 }),
       map((response: ResponseListaUnidadesMedida) => {
-        return response.exito ? response.unidadesMedida : [];
+        return response.exito ? response.unidadmedida : [];
       }),
       catchError((err) => {
         this.errorMessage = 'No se pudo conectar al servidor. Revisa tu red o inténtalo más tarde.';
