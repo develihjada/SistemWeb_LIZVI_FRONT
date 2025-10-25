@@ -13,3 +13,10 @@ export const marcaRoutes: Routes = [
     title: 'Marcas'
   }
 ];
+
+export const MARCA_ROUTES: Routes = [
+  {
+    path: 'catalogos/marcas',
+    children: marcaRoutes
+  }
+];

@@ -43,6 +43,9 @@ export class ListaConfiguracionesPage {
       case 'lista-unidad-medida':
         this.router.navigate(['/lista-unidad-medida']);
         break;
+      case 'lista-marcas':
+        this.router.navigate(['/catalogos/marcas']);
+        break;
       default:
         this.router.navigate([`/${module}`]);
         break;

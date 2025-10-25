@@ -9,6 +9,7 @@ import { FAMILIA_ROUTES } from './modules/familia/familia.routes';
 import { SUBFAMILIA_ROUTES } from './modules/subfamilia/subFamilia.routes';
 import { CLIENTES_ROUTES } from './modules/cliente/cliente.routes';
 import { UNIDADMEDIDA_ROUTES } from './modules/unidadMedida/unidadMedida.routes';
+import { MARCA_ROUTES } from './modules/marca/marca.routes';
 
 export const routes: Routes = [
   ...LOGIN_ROUTES,
@@ -20,5 +21,6 @@ export const routes: Routes = [
   ...SUBFAMILIA_ROUTES,
   ...PRODUCTOS_ROUTES,
   ...CLIENTES_ROUTES,
-  ...UNIDADMEDIDA_ROUTES
+  ...UNIDADMEDIDA_ROUTES,
+  ...MARCA_ROUTES
 ];
