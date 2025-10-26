@@ -449,7 +449,7 @@ export class RegistrarVentasPage implements OnInit {
       this.errorMessage = null;
       this.isLoading = true;
 
-      const EstadoFiltro: RequestListaProductosModel = { estado: 2, idfamilia: 0, idsubfamilia: 0 };
+      const EstadoFiltro: RequestListaProductosModel = { estado: 1, idfamilia: 0, idsubfamilia: 0 };
 
       const api$ = this.api.listaProductos(EstadoFiltro).pipe(
         timeout({ each: 7000 }),

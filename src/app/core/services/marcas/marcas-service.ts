@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { RequestListaMarcasModel } from '../../models/marca/request/listaMarcas.request';
 import { ResponseListaMarcas } from '../../models/marca/response/listaMarcas.response';

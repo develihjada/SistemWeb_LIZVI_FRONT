@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build:prod",
+  "outputDirectory": "dist/SistemWeb_LIZVI_FRONT",
+  "framework": "angular",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

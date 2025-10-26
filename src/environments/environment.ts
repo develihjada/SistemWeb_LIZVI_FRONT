@@ -1,4 +1,4 @@
 export const environment = {
-  api: 'http://192.168.50.40:8085',
-  production: true
+  production: true,
+  api: 'https://tu-api-real.appspot.com/api', // ← Cambia por tu URL real
 };

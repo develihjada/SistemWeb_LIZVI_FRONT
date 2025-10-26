@@ -57,6 +57,10 @@ export class RegistrarProductosPage implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
+  // Modal de confirmación
+  showSuccessModal: boolean = false;
+  modalMessage: string = '';
+
   constructor() {
     this.router = inject(Router);
     this.location = inject(Location);
@@ -133,12 +137,8 @@ export class RegistrarProductosPage implements OnInit {
         this.isLoading = false;
 
         if (response && response.exito) {
-          this.successMessage = (response.mensaje || 'Producto registrado exitosamente') + ' - Redirigiendo al listado...';
-
-          // Redirigir al listado después de 2 segundos
-          setTimeout(() => {
-            this.location.back();
-          }, 2000);
+          this.modalMessage = response.mensaje || 'Producto registrado exitosamente';
+          this.showSuccessModal = true;
         } else {
           this.errorMessage = response?.mensaje || 'Error al registrar el producto. Verifique los datos e inténtelo de nuevo.';
         }
@@ -153,7 +153,7 @@ export class RegistrarProductosPage implements OnInit {
 
   // Método para el botón de Volver/Cancelar
   cancelarRegistro(): void {
-    this.router.navigate(['/catalogos/productos/lista-productos']);
+    this.router.navigate(['/lista-productos']);
   }
 
   // Método para limpiar el formulario
@@ -274,5 +274,15 @@ export class RegistrarProductosPage implements OnInit {
 
     // Limpiar selección de subfamilia cuando cambia la familia
     this.newProduct.idsubfamilia = 0;
+  }
+
+  // Métodos para el modal de éxito
+  cerrarModalYVolver(): void {
+    this.showSuccessModal = false;
+    this.location.back();
+  }
+
+  cerrarModal(): void {
+    this.showSuccessModal = false;
   }
 }

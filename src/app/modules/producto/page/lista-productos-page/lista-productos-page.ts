@@ -6,13 +6,12 @@ import { ProductosService } from '../../../../core/services/productos/productos-
 import { FamiliasService } from '../../../../core/services/familias/familias-service';
 import { SubfamiliasService } from '../../../../core/services/subfamilias/subfamilias-service';
 import { RequestListaProductosModel } from '../../../../core/models/producto/request/listaProductos.request';
-import { RequestListaFamiliasModel } from '../../../../core/models/familia/request/listaFamilias.request';
-import { RequestListaSubfamiliasModel } from '../../../../core/models/subfamilia/request/listaSubfamilias.request';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
-import { ResponseListaProductos } from '../../../../core/models/producto/response/listaProductos.response';
+import { MapingListaProductos, ResponseListaProductos } from '../../../../core/models/producto/response/listaProductos.response';
 import { ProductoModel } from '../../../../core/models/producto/producto.model';
 import { FamiliaModel } from '../../../../core/models/familia/familia.model';
 import { SubfamiliaModel } from '../../../../core/models/subfamilia/subfamilia.model';
+import { RequestActualizarEstadoProducto } from '../../../../core/models/producto/request/actualizarEstadoProducto.request';
 
 
 @Component({
@@ -32,8 +31,12 @@ export class ListaProductosPage {
   isLoading: boolean = false;
   private initialLoadDone: boolean = false;
   errorMessage: string | null = null;
-  private productosSubject = new BehaviorSubject<ProductoModel[]>([]);
-  productosData$: Observable<ProductoModel[]> = this.productosSubject.asObservable();
+  private productosSubject = new BehaviorSubject<MapingListaProductos[]>([]);
+  productosData$: Observable<MapingListaProductos[]> = this.productosSubject.asObservable();
+
+  // Propiedades para alerta de éxito
+  showSuccessAlert: boolean = false;
+  alertMessage: string = '';
 
   // Datos para filtros
   familias: FamiliaModel[] = [];
@@ -78,18 +81,18 @@ export class ListaProductosPage {
       catchError((err) => {
         console.error('Error en la petición:', err);
         this.errorMessage = 'Error del servidor: ' + (err.error?.mensaje || err.message || 'No se pudo conectar al servidor');
-        return of([] as ProductoModel[]);
+        return of([] as MapingListaProductos[]);
       })
     );
 
     const sub = api$.subscribe({
       next: (list) => {
-        let toPush: ProductoModel[] = [];
+        let toPush: MapingListaProductos[] = [];
         if (Array.isArray(list)) {
           toPush = list;
         } else if (list && typeof list === 'object') {
 
-          toPush = [list as ProductoModel];
+          toPush = [list as MapingListaProductos];
         } else {
           toPush = [];
         }
@@ -108,21 +111,58 @@ export class ListaProductosPage {
     });
   }
 
-  // Método para el botón principal "Registrar Producto"
   registrarProducto(): void {
     this.router.navigate(['/registrar-productos']);
   }
 
-  // Método para la acción de Editar en la tabla
-  editarProducto(id: number): void {
-    console.log(`--- ACCIÓN FUTURA: Editando el producto con ID: ${id} ---`);
+  verDetalle(id: number): void {
+    this.router.navigate(['/detalle-productos', id]);
   }
 
-  // Método para la acción de Eliminar en la tabla
-  eliminarProducto(id: number): void {
-    if (confirm(`¿Estás seguro de eliminar el producto con ID ${id}?`)) {
-      console.log(`Producto ${id} marcado para eliminación.`);
-    }
+  editarProducto(id: number): void {
+    this.router.navigate(['/editar-productos', id]);
+  }
+
+  // Método para cambiar el estado del producto (activar/desactivar)
+  cambiarEstadoProducto(producto: MapingListaProductos): void {
+    const nuevoEstado = producto.estado === 1 ? 0 : 1;
+    const request = new RequestActualizarEstadoProducto();
+    request.id = producto.id;
+    request.estado = nuevoEstado;
+
+    this.api.actualizarEstadoProducto(request).subscribe({
+      next: (response) => {
+        if (response.exito) {
+          // Actualizar el estado en el array local
+          producto.estado = nuevoEstado;
+          this.productosSubject.next(this.productosSubject.value);
+
+          // Mostrar alerta de éxito
+          const estadoTexto = nuevoEstado === 1 ? 'activado' : 'desactivado';
+          this.mostrarAlertaExito(`Producto ${estadoTexto} correctamente`);
+        }
+      },
+      error: (error) => {
+        console.error('Error al actualizar estado:', error);
+        this.mostrarAlertaExito('Error al actualizar el estado del producto');
+      }
+    });
+  }
+
+  // Método para mostrar alerta de éxito
+  mostrarAlertaExito(mensaje: string): void {
+    this.alertMessage = mensaje;
+    this.showSuccessAlert = true;
+
+    // Ocultar automáticamente después de 3 segundos
+    setTimeout(() => {
+      this.showSuccessAlert = false;
+    }, 3000);
+  }
+
+  // Método para cerrar manualmente la alerta
+  cerrarAlerta(): void {
+    this.showSuccessAlert = false;
   }
 
   // Método para manejar errores de carga de imágenes

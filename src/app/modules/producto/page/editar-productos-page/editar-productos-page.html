@@ -1,1 +1,210 @@
-<p>editar-productos-page works!</p>
+<div class="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-8">
+
+    <!-- Indicador de carga inicial -->
+    <div *ngIf="isLoadingData" class="flex justify-center items-center min-h-screen">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mb-4"></div>
+            <p class="text-gray-600 text-lg">Cargando datos del producto...</p>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div *ngIf="!isLoadingData" class="w-full max-w-4xl mx-auto">
+
+        <!-- Encabezado -->
+        <div class="flex items-center justify-between pb-6 border-b border-gray-300 mb-8">
+            <div class="flex items-center gap-4">
+                <button (click)="volverSinGuardar()"
+                        class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l14 0" />
+                        <path d="M5 12l4 4" />
+                        <path d="M5 12l4 -4" />
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-3xl font-extrabold text-gray-900">Editar Producto</h1>
+                    <p class="text-gray-600 mt-1">ID: {{ producto.id }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de éxito usando el componente -->
+        <app-modal-exito-actualizacion
+            [isVisible]="showSuccessModal"
+            [mensaje]="modalMessage"
+            titulo="¡Producto actualizado correctamente!"
+            textoBoton="Volver a la Lista"
+            (onConfirmar)="cerrarModalYVolver()"
+            (onCerrar)="cerrarModal()">
+        </app-modal-exito-actualizacion>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            {{ errorMessage }}
+        </div>
+
+        <!-- Formulario de edición -->
+        <form (ngSubmit)="actualizarProducto()" class="space-y-8">
+
+            <!-- Sección de Información Básica -->
+            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 pb-3 border-b border-orange-100">Información Básica</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Producto <span class="text-red-500">*</span></label>
+                        <input type="text"
+                               [(ngModel)]="producto.producto"
+                               name="producto"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                               placeholder="Ej: Laptop Dell Inspiron 15"
+                               required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                        <select [(ngModel)]="producto.estado"
+                                name="estado"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción <span class="text-red-500">*</span></label>
+                    <textarea [(ngModel)]="producto.descripcion"
+                              name="descripcion"
+                              rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                              placeholder="Describe las características principales del producto..."
+                              required></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">URL de Imagen</label>
+                    <input type="url"
+                           [(ngModel)]="producto.imagen"
+                           name="imagen"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                           placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+            </div>
+
+            <!-- Sección de Precio e Inventario -->
+            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 pb-3 border-b border-orange-100">Precio e Inventario</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Precio de Venta (S/) <span class="text-red-500">*</span></label>
+                        <input type="number"
+                               [(ngModel)]="producto.precio"
+                               name="precio"
+                               step="0.01"
+                               min="0"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                               placeholder="0.00"
+                               required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Stock Inicial <span class="text-red-500">*</span></label>
+                        <input type="number"
+                               [(ngModel)]="producto.stock"
+                               name="stock"
+                               min="0"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                               placeholder="0"
+                               required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Clasificación -->
+            <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 pb-3 border-b border-orange-100">Clasificación</h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Familia <span class="text-red-500">*</span></label>
+                        <select [(ngModel)]="familiaSeleccionada"
+                                name="familiaSeleccionada"
+                                (change)="onFamiliaChange()"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                                required>
+                            <option value="0">Seleccione una familia</option>
+                            <option *ngFor="let familia of familias" [value]="familia.id">
+                                {{ familia.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Subfamilia <span class="text-red-500">*</span></label>
+                        <select [(ngModel)]="producto.idsubfamilia"
+                                name="idsubfamilia"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                                [disabled]="isLoadingData || subfamilias.length === 0"
+                                required>
+                            <option value="0">{{ isLoadingData ? 'Cargando subfamilias...' : (subfamilias.length === 0 ? 'No hay subfamilias disponibles' : 'Seleccione una subfamilia') }}</option>
+                            <option *ngFor="let subfamilia of subfamilias" [value]="subfamilia.id">
+                                {{ subfamilia.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Marca <span class="text-red-500">*</span></label>
+                        <select [(ngModel)]="producto.idmarca"
+                                name="idmarca"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                                required>
+                            <option value="0">Seleccione una marca</option>
+                            <option *ngFor="let marca of marcas" [value]="marca.id">
+                                {{ marca.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-1 gap-6 mt-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Unidad de Medida <span class="text-red-500">*</span></label>
+                        <select [(ngModel)]="producto.idunidadmedida"
+                                name="idunidadmedida"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-150"
+                                required>
+                            <option value="0">Seleccione una unidad de medida</option>
+                            <option *ngFor="let unidad of unidadesMedida" [value]="unidad.id">
+                                {{ unidad.descripcion }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-col sm:flex-row justify-end gap-4 pt-6 border-t border-gray-200">
+                <button type="button"
+                        (click)="volverSinGuardar()"
+                        class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-150 shadow-md">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        [disabled]="isLoading"
+                        class="px-8 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 flex items-center justify-center min-w-[140px]">
+                    <div *ngIf="isLoading" class="flex items-center">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Actualizando...
+                    </div>
+                    <span *ngIf="!isLoading">Actualizar Producto</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

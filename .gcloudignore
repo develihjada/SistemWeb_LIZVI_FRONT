@@ -1,0 +1,48 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+
+# Source files (no necesarios en producción)
+src/
+public/
+
+# Build tools y configuraciones de desarrollo
+angular.json
+tsconfig*.json
+.angular/
+.vscode/
+
+# Archivos de desarrollo
+*.spec.ts
+*.test.ts
+e2e/
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+.tmp/
+.temp/
+
+# Git
+.git/
+.gitignore
+
+# Otros archivos de configuración no necesarios en producción
+README.md
+.editorconfig
+.prettierrc
+.eslintrc*
+
+# Firebase (si no lo usas)
+firebase.json
+.firebaserc
+.firebase/
+
+# Docker (si no lo usas)
+Dockerfile
+docker-compose.yml
+
+# Vercel (si no lo usas)
+vercel.json

@@ -1,0 +1,32 @@
+runtime: nodejs18
+
+# Variables de entorno - CAMBIA ESTA URL POR LA DE TU API REAL
+env_variables:
+  API_URL: "https://tu-api-real.appspot.com/api"  # ← Cambia esta línea
+  PRODUCTION: "true"
+
+# Configuración para servir archivos estáticos
+handlers:
+# Archivos estáticos (JS, CSS, imágenes)
+- url: /(.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map))
+  static_files: dist/SistemWeb_LIZVI_FRONT/\1
+  upload: dist/SistemWeb_LIZVI_FRONT/(.*\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map))
+  secure: always
+  http_headers:
+    Cache-Control: "public, max-age=31536000"
+
+# Archivos HTML específicos
+- url: /(.*\.html)
+  static_files: dist/SistemWeb_LIZVI_FRONT/\1
+  upload: dist/SistemWeb_LIZVI_FRONT/(.*\.html)
+  secure: always
+  http_headers:
+    Cache-Control: "no-cache, no-store, must-revalidate"
+
+# Todas las demás rutas van al index.html (para Angular routing)
+- url: /.*
+  static_files: dist/SistemWeb_LIZVI_FRONT/index.html
+  upload: dist/SistemWeb_LIZVI_FRONT/index.html
+  secure: always
+  http_headers:
+    Cache-Control: "no-cache, no-store, must-revalidate"

@@ -1,0 +1,32 @@
+<!-- Modal de éxito para actualización de productos -->
+<div *ngIf="isVisible" class="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-all">
+        <div class="text-center">
+            <!-- Icono de éxito -->
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+
+            <!-- Título -->
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ titulo }}</h3>
+
+            <!-- Mensaje -->
+            <p class="text-gray-600 mb-6">{{ mensaje }}</p>
+
+            <!-- Botones -->
+            <div class="flex flex-col gap-3">
+                <button (click)="confirmarYCerrar()"
+                        class="w-full bg-orange-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-700 transition duration-150">
+                    {{ textoBoton }}
+                </button>
+
+                <button (click)="cerrarModal()"
+                        class="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition duration-150">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
