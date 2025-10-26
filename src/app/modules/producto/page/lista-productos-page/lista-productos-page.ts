@@ -12,11 +12,14 @@ import { ProductoModel } from '../../../../core/models/producto/producto.model';
 import { FamiliaModel } from '../../../../core/models/familia/familia.model';
 import { SubfamiliaModel } from '../../../../core/models/subfamilia/subfamilia.model';
 import { RequestActualizarEstadoProducto } from '../../../../core/models/producto/request/actualizarEstadoProducto.request';
+import { AlertaExitoComponent } from '../../components/alerta-exito/alerta-exito.component';
+import { LoadingDatos } from '../../../../shared/components/loading-datos/loading-datos';
+import { ErrorConexionApi } from '../../../../shared/components/error-conexion-api/error-conexion-api';
 
 
 @Component({
   selector: 'app-lista-productos-page',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertaExitoComponent, LoadingDatos, ErrorConexionApi],
   templateUrl: './lista-productos-page.html',
   styleUrl: './lista-productos-page.css'
 })
@@ -163,6 +166,11 @@ export class ListaProductosPage {
   // Método para cerrar manualmente la alerta
   cerrarAlerta(): void {
     this.showSuccessAlert = false;
+  }
+
+  // Método para cerrar el mensaje de error
+  cerrarError(): void {
+    this.errorMessage = '';
   }
 
   // Método para manejar errores de carga de imágenes

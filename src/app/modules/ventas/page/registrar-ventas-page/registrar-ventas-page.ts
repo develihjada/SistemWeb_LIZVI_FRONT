@@ -474,7 +474,7 @@ export class RegistrarVentasPage implements OnInit {
             toPush = [];
           }
 
-          this.todosLosProductos = [...toPush]; // Guardar copia de todos los productos
+          this.todosLosProductos = [...toPush];
           this.productosSubject.next(toPush);
           this.initialLoadDone = true;
         },

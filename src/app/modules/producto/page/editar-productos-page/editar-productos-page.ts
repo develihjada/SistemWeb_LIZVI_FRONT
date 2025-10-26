@@ -50,6 +50,12 @@ export class EditarProductosPage implements OnInit {
   showSuccessModal: boolean = false;
   modalMessage: string = '';
 
+  // Estados de validación de imagen
+  imagenError: boolean = false;
+  imagenValida: boolean = false;
+  imagenCargando: boolean = false;
+  imagenErrorMessage: string = '';
+
   // Datos para selects
   familias: FamiliaModel[] = [];
   todasLasSubfamilias: SubfamiliaModel[] = [];
@@ -354,6 +360,72 @@ export class EditarProductosPage implements OnInit {
 
   cerrarModal(): void {
     this.showSuccessModal = false;
+  }
+
+  // Métodos para validación de imágenes
+  onImageUrlChange(): void {
+    this.resetImageValidation();
+
+    if (!this.producto.imagen || this.producto.imagen.trim() === '') {
+      return;
+    }
+
+    // Verificar si es un enlace de Facebook
+    if (this.esFacebookUrl(this.producto.imagen)) {
+      this.imagenError = true;
+      this.imagenErrorMessage = 'Los enlaces de Facebook no funcionan como URLs de imagen. Necesitas una URL directa de imagen.';
+      return;
+    }
+
+    // Verificar si es un enlace de Instagram
+    if (this.esInstagramUrl(this.producto.imagen)) {
+      this.imagenError = true;
+      this.imagenErrorMessage = 'Los enlaces de Instagram no funcionan como URLs de imagen. Necesitas una URL directa de imagen.';
+      return;
+    }
+
+    // Verificar si es una URL válida de imagen
+    if (this.esUrlImagenValida(this.producto.imagen)) {
+      this.imagenCargando = true;
+      // La validación final se hará en onImageLoad/onImageError
+    } else {
+      this.imagenError = true;
+      this.imagenErrorMessage = 'La URL debe terminar en .jpg, .jpeg, .png, .gif, .webp o .svg';
+    }
+  }
+
+  onImageLoad(): void {
+    this.imagenCargando = false;
+    this.imagenValida = true;
+    this.imagenError = false;
+  }
+
+  onImageError(): void {
+    this.imagenCargando = false;
+    this.imagenValida = false;
+    this.imagenError = true;
+    this.imagenErrorMessage = 'No se pudo cargar la imagen. Verifica que la URL sea correcta y accesible.';
+  }
+
+  private resetImageValidation(): void {
+    this.imagenError = false;
+    this.imagenValida = false;
+    this.imagenCargando = false;
+    this.imagenErrorMessage = '';
+  }
+
+  private esFacebookUrl(url: string): boolean {
+    return url.includes('facebook.com') || url.includes('fb.com') || url.includes('fbcdn.net');
+  }
+
+  private esInstagramUrl(url: string): boolean {
+    return url.includes('instagram.com') || url.includes('cdninstagram.com');
+  }
+
+  private esUrlImagenValida(url: string): boolean {
+    const extensionesValidas = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    const urlLower = url.toLowerCase();
+    return extensionesValidas.some(ext => urlLower.includes(ext));
   }
 
   volverSinGuardar(): void {

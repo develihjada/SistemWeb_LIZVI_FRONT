@@ -1,0 +1,80 @@
+/* Animaciones para la alerta de éxito */
+
+.animate-slide-in {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animación alternativa para slide desde arriba */
+.animate-slide-in-top {
+  animation: slideInTop 0.3s ease-out forwards;
+}
+
+@keyframes slideInTop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación de salida */
+.animate-slide-out {
+  animation: slideOutRight 0.3s ease-in forwards;
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Estilos adicionales */
+.alerta-exito {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .alerta-exito {
+    margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+  }
+}
+
+/* Hover effects */
+.alerta-exito:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Estados de color alternativos para diferentes tipos */
+.alerta-info {
+  background-color: #3b82f6; /* blue-500 */
+}
+
+.alerta-warning {
+  background-color: #f59e0b; /* amber-500 */
+}
+
+.alerta-error {
+  background-color: #ef4444; /* red-500 */
+}

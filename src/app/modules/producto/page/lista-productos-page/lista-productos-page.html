@@ -1,195 +1,326 @@
 <div class="flex flex-col min-h-screen bg-gray-50 p-4 sm:p-8">
-
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-300 flex-none">
-
-        <div class="flex items-center gap-4 mb-4 md:mb-0">
-            <button (click)="volverCatalogos()" class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l4 4" /><path d="M5 12l4 -4" /></svg>
-            </button>
-            <h1 class="text-3xl font-extrabold text-gray-900">Catálogo de Productos</h1>
-        </div>
-
-        <button (click)="registrarProducto()"
-            class="w-full md:w-auto px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 flex items-center justify-center">
-            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-            Registrar Producto
-        </button>
-    </div>
-
-    <!-- Alerta de éxito -->
-    <div *ngIf="showSuccessAlert" class="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 transition-all duration-300 ease-in-out">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-300 flex-none"
+  >
+    <div class="flex items-center gap-4 mb-4 md:mb-0">
+      <button
+        (click)="volverCatalogos()"
+        class="bg-orange-600 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center hover:bg-orange-700 transition"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-5 h-5"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M5 12l14 0" />
+          <path d="M5 12l4 4" />
+          <path d="M5 12l4 -4" />
         </svg>
-        <span class="font-medium">{{ alertMessage }}</span>
-        <button (click)="cerrarAlerta()" class="ml-4 text-white hover:text-gray-200 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
+      </button>
+      <h1 class="text-3xl font-extrabold text-gray-900">Catálogo de Productos</h1>
     </div>
 
-    <div class="mt-6 flex flex-col lg:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-md">
+    <button
+      (click)="registrarProducto()"
+      class="w-full md:w-auto px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition duration-150 flex items-center justify-center"
+    >
+      <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Registrar Producto
+    </button>
+  </div>
 
-        <input
-            type="text"
-            placeholder="Buscar por código, nombre o SKU..."
-            class="w-full lg:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition"
-        />
+  <app-alerta-exito
+    [isVisible]="showSuccessAlert"
+    [mensaje]="alertMessage"
+    [duracionMs]="3000"
+    posicion="top-right"
+    [autoClose]="true"
+    (onCerrar)="cerrarAlerta()"
+    (onTimeout)="cerrarAlerta()"
+  >
+  </app-alerta-exito>
 
-        <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-            <select [(ngModel)]="filtroFamilia" (change)="onFamiliaChange()"
-                    class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white">
-                <option value="0">Todas las Familias</option>
-                <option *ngFor="let familia of familias" [value]="familia.id">{{familia.descripcion}}</option>
-            </select>
+  <div
+    class="mt-6 flex flex-col lg:flex-row gap-4 justify-between items-center bg-white p-4 rounded-lg shadow-md"
+  >
+    <input
+      type="text"
+      placeholder="Buscar por código, nombre o SKU..."
+      class="w-full lg:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition"
+    />
 
-            <select [(ngModel)]="filtroSubfamilia" (change)="onSubfamiliaChange()"
-                    class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white">
-                <option value="0">Todas las Subfamilias</option>
-                <option *ngFor="let subfamilia of subfamilias" [value]="subfamilia.id">{{subfamilia.descripcion}}</option>
-            </select>
+    <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+      <select
+        [(ngModel)]="filtroFamilia"
+        (change)="onFamiliaChange()"
+        class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white"
+      >
+        <option value="0">Todas las Familias</option>
+        <option *ngFor="let familia of familias" [value]="familia.id">
+          {{ familia.descripcion }}
+        </option>
+      </select>
 
-            <button (click)="limpiarFiltros()"
-                    class="w-full sm:w-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-150 flex items-center justify-center">
-                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Limpiar
-            </button>
-        </div>
+      <select
+        [(ngModel)]="filtroSubfamilia"
+        (change)="onSubfamiliaChange()"
+        class="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-600 focus:border-orange-600 transition bg-white"
+      >
+        <option value="0">Todas las Subfamilias</option>
+        <option *ngFor="let subfamilia of subfamilias" [value]="subfamilia.id">
+          {{ subfamilia.descripcion }}
+        </option>
+      </select>
+
+      <button
+        (click)="limpiarFiltros()"
+        class="w-full sm:w-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-150 flex items-center justify-center"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+        Limpiar
+      </button>
     </div>
+  </div>
 
-    <div class="mt-8 flex-grow overflow-x-auto bg-white rounded-lg shadow-md">
+  <div class="mt-8 flex-grow overflow-x-auto bg-white rounded-lg shadow-md">
 
-        <!-- Indicador de carga -->
-        <div *ngIf="isLoading" class="p-8 text-center">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
-            <p class="mt-2 text-gray-600">Cargando productos...</p>
-        </div>
+    @if (isLoading) {
+    <app-loading-datos />
+    }
 
-        <!-- Mensaje de error -->
-        <div *ngIf="errorMessage" class="p-8 text-center text-red-600 bg-red-50 rounded-lg">
-            <p>{{ errorMessage }}</p>
-            <button (click)="listarProductos()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                Reintentar
-            </button>
-        </div>
+    @if(errorMessage){
+    <app-error-conexion-api
+      [errorMessage]="errorMessage"
+      [mostrarBotonReintentar]="true"
+      textoBoton="Reintentar carga"
+      (onReintentar)="listarProductos()"
+      (onCerrar)="cerrarError()"
+    >
+    </app-error-conexion-api>
+    }
 
-        <div class="p-4" *ngIf="!isLoading && !errorMessage">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"></th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Código</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nombre</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Familia</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Precio Venta</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Stock</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Estado</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <ng-container *ngIf="productosData$ | async as productosData">
-                     <ng-container *ngFor="let product of productosData$ | async; let i = index">
-                         <tr>
-                        <td class="px-3 py-4 whitespace-nowrap">
-                            <div class="h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 overflow-hidden">
-                                <!-- Mostrar imagen del producto si existe y no ha fallado -->
-                                <img
-                                    *ngIf="product.imagen && !product.imagenError"
-                                    [src]="product.imagen"
-                                    [alt]="product.descripcion"
-                                    class="w-full h-full object-cover rounded-lg"
-                                    (error)="onImageError(product)"
-                                />
-                                <!-- Mostrar SVG por defecto si no hay imagen o ha fallado -->
-                                <svg
-                                    *ngIf="!product.imagen || product.imagenError"
-                                    class="w-5 h-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ product.id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">{{ product.producto }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">{{ product.familia }}</td>
+    @if (!isLoading && !errorMessage) {
+    <div class="p-4">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-200">
+          <tr>
+            <th
+              class="px-3 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+            ></th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Código
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Nombre
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Familia
+            </th>
+            <th
+              class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Precio Venta
+            </th>
+            <th
+              class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Stock
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Estado
+            </th>
+            <th
+              class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider"
+            >
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <ng-container *ngIf="productosData$ | async as productosData">
+            <ng-container *ngFor="let product of productosData$ | async; let i = index">
+              <tr>
+                <td class="px-3 py-4 whitespace-nowrap">
+                  <div
+                    class="h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 overflow-hidden"
+                  >
+                    <!-- Mostrar imagen del producto si existe y no ha fallado -->
+                    <img
+                      *ngIf="product.imagen && !product.imagenError"
+                      [src]="product.imagen"
+                      [alt]="product.descripcion"
+                      class="w-full h-full object-cover rounded-lg"
+                      (error)="onImageError(product)"
+                    />
+                    <!-- Mostrar SVG por defecto si no hay imagen o ha fallado -->
+                    <svg
+                      *ngIf="!product.imagen || product.imagenError"
+                      class="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ product.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">
+                  {{ product.producto }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">
+                  {{ product.familia }}
+                </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold text-right">S/ {{ product.precio | number:'1.2-2' }}</td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold text-right"
+                >
+                  S/ {{ product.precio | number : '1.2-2' }}
+                </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right"
-                            [ngClass]="{'text-red-600': product.stock < 10, 'text-gray-800': product.stock >= 10}">
-                            {{ product.stock }}
-                        </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-sm font-bold text-right"
+                  [ngClass]="{
+                    'text-red-600': product.stock < 10,
+                    'text-gray-800': product.stock >= 10
+                  }"
+                >
+                  {{ product.stock }}
+                </td>
 
-                        <!-- Columna de Estado con switch -->
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            <div class="flex items-center justify-center">
-                                <span class="text-xs text-gray-600 mr-2"
-                                      [class]="product.estado === 1 ? 'text-green-600' : 'text-red-600'">
-                                    {{ product.estado === 1 ? 'Activo' : 'Inactivo' }}
-                                </span>
-                                <button
-                                    (click)="cambiarEstadoProducto(product)"
-                                    class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-                                    [class]="product.estado === 1 ? 'bg-green-500' : 'bg-gray-300'"
-                                    [title]="product.estado === 1 ? 'Desactivar producto' : 'Activar producto'">
-                                    <span
-                                        class="inline-block w-4 h-4 transform bg-white rounded-full shadow-lg transition-transform duration-200 ease-in-out"
-                                        [class]="product.estado === 1 ? 'translate-x-6' : 'translate-x-1'">
-                                    </span>
-                                </button>
-                            </div>
-                        </td>
+                <!-- Columna de Estado con switch -->
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                  <div class="flex items-center justify-center">
+                    <span
+                      class="text-xs text-gray-600 mr-2"
+                      [class]="product.estado === 1 ? 'text-green-600' : 'text-red-600'"
+                    >
+                      {{ product.estado === 1 ? 'Activo' : 'Inactivo' }}
+                    </span>
+                    <button
+                      (click)="cambiarEstadoProducto(product)"
+                      class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                      [class]="product.estado === 1 ? 'bg-green-500' : 'bg-gray-300'"
+                      [title]="product.estado === 1 ? 'Desactivar producto' : 'Activar producto'"
+                    >
+                      <span
+                        class="inline-block w-4 h-4 transform bg-white rounded-full shadow-lg transition-transform duration-200 ease-in-out"
+                        [class]="product.estado === 1 ? 'translate-x-6' : 'translate-x-1'"
+                      >
+                      </span>
+                    </button>
+                  </div>
+                </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex justify-end gap-2">
-                                <button (click)="verDetalle(product.id)" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 transition-colors duration-200 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                    Ver
-                                </button>
-                                <button (click)="editarProducto(product.id)" class="bg-orange-100 text-orange-700 px-3 py-1 rounded-md hover:bg-orange-200 transition-colors duration-200 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                    </svg>
-                                    Editar
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      (click)="verDetalle(product.id)"
+                      class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 transition-colors duration-200 flex items-center"
+                    >
+                      <svg
+                        class="w-4 h-4 mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        ></path>
+                      </svg>
+                      Ver
+                    </button>
+                    <button
+                      (click)="editarProducto(product.id)"
+                      class="bg-orange-100 text-orange-700 px-3 py-1 rounded-md hover:bg-orange-200 transition-colors duration-200 flex items-center"
+                    >
+                      <svg
+                        class="w-4 h-4 mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        ></path>
+                      </svg>
+                      Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
 
-                     </ng-container>
-
-
-                    <tr *ngIf="(productosData.length === 0)">
-                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">No se encontraron productos en el catálogo.</td>
-                    </tr>
-                  </ng-container>
-
-
-                </tbody>
-            </table>
-        </div>
-
-        <ng-container *ngIf="!errorMessage && !isLoading">
-          <div *ngIf="productosData$ | async as productosData" class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center text-sm">
-            <span>{{ productosData.length }} productos</span>
-            <div>
-                <button class="px-3 py-1 border border-gray-300 rounded-l-lg hover:bg-gray-100">Anterior</button>
-                <button class="px-3 py-1 border border-gray-300 rounded-r-lg hover:bg-gray-100">Siguiente</button>
-            </div>
-        </div>
-        </ng-container>
-
-
-
+            <tr *ngIf="productosData.length === 0">
+              <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                No se encontraron productos en el catálogo.
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
+    }
+
+    <ng-container *ngIf="!errorMessage && !isLoading">
+      <div
+        *ngIf="productosData$ | async as productosData"
+        class="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center text-sm"
+      >
+        <span>{{ productosData.length }} productos</span>
+        <div>
+          <button class="px-3 py-1 border border-gray-300 rounded-l-lg hover:bg-gray-100">
+            Anterior
+          </button>
+          <button class="px-3 py-1 border border-gray-300 rounded-r-lg hover:bg-gray-100">
+            Siguiente
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>
