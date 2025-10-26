@@ -1,0 +1,61 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-image {
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-weight: bold;
+  color: #2b5797; /* Azul del logo */
+  font-family: 'Arial', sans-serif;
+}
+
+/* Tamaños del logo */
+.logo-small {
+  height: 32px;
+}
+
+.logo-small .logo-text {
+  font-size: 14px;
+}
+
+.logo-medium {
+  height: 48px;
+}
+
+.logo-medium .logo-text {
+  font-size: 18px;
+}
+
+.logo-large {
+  height: 64px;
+}
+
+.logo-large .logo-text {
+  font-size: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo-medium {
+    height: 40px;
+  }
+
+  .logo-medium .logo-text {
+    font-size: 16px;
+  }
+
+  .logo-large {
+    height: 48px;
+  }
+
+  .logo-large .logo-text {
+    font-size: 20px;
+  }
+}

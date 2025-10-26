@@ -2,19 +2,19 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProductosService } from '../../../../core/services/productos/productos-service';
-import { FamiliasService } from '../../../../core/services/familias/familias-service';
-import { SubfamiliasService } from '../../../../core/services/subfamilias/subfamilias-service';
-import { RequestListaProductosModel } from '../../../../core/models/producto/request/listaProductos.request';
+import { ProductosService } from '@core/services/productos/productos-service';
+import { FamiliasService } from '@core/services/familias/familias-service';
+import { SubfamiliasService } from '@core/services/subfamilias/subfamilias-service';
+import { RequestListaProductosModel } from '@core/models/producto/request/listaProductos.request';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
-import { MapingListaProductos, ResponseListaProductos } from '../../../../core/models/producto/response/listaProductos.response';
-import { ProductoModel } from '../../../../core/models/producto/producto.model';
-import { FamiliaModel } from '../../../../core/models/familia/familia.model';
-import { SubfamiliaModel } from '../../../../core/models/subfamilia/subfamilia.model';
-import { RequestActualizarEstadoProducto } from '../../../../core/models/producto/request/actualizarEstadoProducto.request';
+import { MapingListaProductos, ResponseListaProductos } from '@core/models/producto/response/listaProductos.response';
+import { ProductoModel } from '@core/models/producto/producto.model';
+import { FamiliaModel } from '@core/models/familia/familia.model';
+import { SubfamiliaModel } from '@core/models/subfamilia/subfamilia.model';
+import { RequestActualizarEstadoProducto } from '@core/models/producto/request/actualizarEstadoProducto.request';
 import { AlertaExitoComponent } from '../../components/alerta-exito/alerta-exito.component';
-import { LoadingDatos } from '../../../../shared/components/loading-datos/loading-datos';
-import { ErrorConexionApi } from '../../../../shared/components/error-conexion-api/error-conexion-api';
+import { LoadingDatos } from '@shared/components/loading-datos/loading-datos';
+import { ErrorConexionApi } from '@shared/components/error-conexion-api/error-conexion-api';
 
 
 @Component({
@@ -100,7 +100,6 @@ export class ListaProductosPage {
           toPush = [];
         }
 
-        // Siempre empujamos el resultado (incluso vacío) para que la UI refleje la búsqueda
         this.productosSubject.next(toPush);
         console.log('productosSubject after search:', this.productosSubject.getValue());
         this.initialLoadDone = true;
@@ -126,7 +125,6 @@ export class ListaProductosPage {
     this.router.navigate(['/editar-productos', id]);
   }
 
-  // Método para cambiar el estado del producto (activar/desactivar)
   cambiarEstadoProducto(producto: MapingListaProductos): void {
     const nuevoEstado = producto.estado === 1 ? 0 : 1;
     const request = new RequestActualizarEstadoProducto();
@@ -152,33 +150,27 @@ export class ListaProductosPage {
     });
   }
 
-  // Método para mostrar alerta de éxito
   mostrarAlertaExito(mensaje: string): void {
     this.alertMessage = mensaje;
     this.showSuccessAlert = true;
 
-    // Ocultar automáticamente después de 3 segundos
     setTimeout(() => {
       this.showSuccessAlert = false;
     }, 3000);
   }
 
-  // Método para cerrar manualmente la alerta
   cerrarAlerta(): void {
     this.showSuccessAlert = false;
   }
 
-  // Método para cerrar el mensaje de error
   cerrarError(): void {
     this.errorMessage = '';
   }
 
-  // Método para manejar errores de carga de imágenes
   onImageError(producto: ProductoModel): void {
     producto.imagenError = true;
   }
 
-  // Métodos para filtros
   listarFamilias(): void {
     const request = { estado: 2 };
     this.familiasApi.listaFamilias(request).subscribe({
@@ -209,7 +201,6 @@ export class ListaProductosPage {
     const request = { estado: 2, idfamilia: this.filtroFamilia };
     this.subfamiliasApi.listaSubfamilias(request).subscribe({
       next: (response) => {
-        console.log('Subfamilias filtradas por familia:', response);
         this.subfamilias = response.exito ? response.subFamilia : [];
       },
       error: () => {
@@ -219,15 +210,13 @@ export class ListaProductosPage {
   }
 
   onFamiliaChange(): void {
-    // Convertir a número para evitar problemas de tipo
     this.filtroFamilia = Number(this.filtroFamilia) || 0;
     this.filtroSubfamilia = 0;
-
-    // Cargar subfamilias filtradas por familia desde el backend
     this.cargarSubfamiliasPorFamilia();
     this.aplicarFiltros();
-  }  onSubfamiliaChange(): void {
-    // Convertir a número para evitar problemas de tipo
+  }
+
+  onSubfamiliaChange(): void {
     this.filtroSubfamilia = Number(this.filtroSubfamilia) || 0;
     this.aplicarFiltros();
   }
@@ -243,8 +232,7 @@ export class ListaProductosPage {
     this.listarProductos();
   }
 
-  // Método para el botón de Volver
   volverCatalogos(): void {
-    this.location.back();
+    this.router.navigate(['/configuracion']);
   }
 }

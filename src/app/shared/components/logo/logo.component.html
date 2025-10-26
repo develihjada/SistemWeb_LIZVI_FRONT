@@ -1,0 +1,10 @@
+<div class="logo-container" [ngClass]="'logo-' + size">
+  <img
+    src="assets/images/icon-lizvi.png"
+    [alt]="altText"
+    class="logo-image"
+    (error)="onImageError()"
+    (load)="onImageLoad()"
+  >
+  <span *ngIf="showText" class="logo-text">Lizvi EIRL</span>
+</div>

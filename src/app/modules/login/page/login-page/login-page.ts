@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { LogoComponent } from '@shared/components/logo/logo.component';
 
 @Component({
   selector: 'app-login-page',
-  imports: [],
+  imports: [LogoComponent],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css'
 })
