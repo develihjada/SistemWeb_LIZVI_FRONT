@@ -1,0 +1,1 @@
+import{Fa as a,Xa as o,Ya as s,jb as r}from"./chunk-NRNLENJO.js";var i=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=a({type:t,selectors:[["app-listar-ventas-page"]],decls:2,vars:0,template:function(e,m){e&1&&(o(0,"p"),r(1,"listar-ventas-page works!"),s())},encapsulation:2})};export{i as ListarVentasPage};

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './lista-configuraciones-page.css'
 })
 export class ListaConfiguracionesPage {
- activeTab: 'general' | 'catalogos' | 'usuarios' | 'sistema' = 'general';
+ activeTab:  'catalogos' | 'usuarios' | 'sistema' = 'catalogos';
 
   private location: Location;
   private router: Router;
@@ -22,7 +22,7 @@ export class ListaConfiguracionesPage {
   ngOnInit(): void {
   }
 
-  setActiveTab(tabName: 'general' | 'catalogos' | 'usuarios' | 'sistema'): void {
+  setActiveTab(tabName: 'catalogos' | 'usuarios' | 'sistema'): void {
     this.activeTab = tabName;
   }
 
