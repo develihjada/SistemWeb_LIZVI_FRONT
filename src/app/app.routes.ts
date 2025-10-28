@@ -12,6 +12,12 @@ import { UNIDADMEDIDA_ROUTES } from './modules/unidadMedida/unidadMedida.routes'
 import { MARCA_ROUTES } from './modules/marca/marca.routes';
 
 export const routes: Routes = [
+  // Redirección por defecto a login
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
   ...LOGIN_ROUTES,
   ...INICIO_ROUTES,
   ...VENTAS_ROUTES,
@@ -22,5 +28,10 @@ export const routes: Routes = [
   ...PRODUCTOS_ROUTES,
   ...CLIENTES_ROUTES,
   ...UNIDADMEDIDA_ROUTES,
-  ...MARCA_ROUTES
+  ...MARCA_ROUTES,
+  // Ruta wildcard para páginas no encontradas (opcional)
+  {
+    path: '**',
+    redirectTo: '/login'
+  }
 ];
