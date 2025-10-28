@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './lista-configuraciones-page.css'
 })
 export class ListaConfiguracionesPage {
- activeTab:  'catalogos' | 'usuarios' | 'sistema' = 'catalogos';
+  activeTab:  'catalogos' | 'usuarios' | 'sistema' = 'catalogos';
 
   private location: Location;
   private router: Router;
