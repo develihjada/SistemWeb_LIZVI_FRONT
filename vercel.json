@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build:vercel",
-  "outputDirectory": "dist/SistemWeb_LIZVI_FRONT",
+  "outputDirectory": "dist/SistemWeb_LIZVI_FRONT/browser",
   "framework": "angular",
   "rewrites": [
     {
