@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'https://api.tudominio.com',
+  api: 'https://ventaslizvi.uc.r.appspot.com',
 };

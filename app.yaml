@@ -2,7 +2,7 @@ runtime: nodejs18
 
 # Variables de entorno - URL del API Backend
 env_variables:
-  API_URL: "https://sistemweb-lizvi-back.appspot.com/api"  # ← Actualizar con tu URL real
+  API_URL: "https://ventaslizvi.uc.r.appspot.com"  # ← Tu URL real del API
   PRODUCTION: "true"
 
 # Configuración para servir archivos estáticos
