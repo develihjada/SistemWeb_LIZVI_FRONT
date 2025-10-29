@@ -2,6 +2,7 @@
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist/SistemWeb_LIZVI_FRONT/browser",
   "framework": "angular",
+  "installCommand": "npm ci",
   "rewrites": [
     {
       "source": "/(.*)",
