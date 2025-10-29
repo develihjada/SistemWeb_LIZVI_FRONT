@@ -1,7 +1,7 @@
-<div class="flex flex-col h-screen bg-gray-50 overflow-hidden">
-  <div class="flex-grow md:grid md:grid-cols-3">
+<div class="flex flex-col h-screen bg-gray-50">
+  <div class="flex-grow md:grid md:grid-cols-3 h-full">
 
-    <div class="md:col-span-2 bg-white border-r border-gray-200 p-4 sm:p-6 pb-20 md:pb-4 flex flex-col h-full">
+    <div class="md:col-span-2 bg-white border-r border-gray-200 p-4 sm:p-6 pb-20 md:pb-4 flex flex-col h-full overflow-hidden">
 
       <div
         class="sticky top-0 bg-white pt-1 pb-4 z-10 border-b border-gray-100 -mx-4 px-4 sm:-mx-6 sm:px-6 flex-none"
@@ -71,14 +71,14 @@
       </div>
 
 
-      <div class="product-content pt-4 flex-grow overflow-y-auto">
+      <div class="product-content pt-4 flex-grow overflow-y-auto h-[calc(100vh-20rem)] md:h-[calc(100vh-12rem)] mobile-scroll-container product-list-mobile">
         <div
           *ngIf="activeTab === 'familias'"
-          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-4 product-grid"
         >
           <!-- Opción para mostrar todos los productos -->
           <div
-            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center product-item fade-in-up"
             [ngClass]="{
               'bg-orange-100 ring-2 ring-orange-600': familiaSeleccionada === null,
               'bg-gray-200': familiaSeleccionada !== null
@@ -92,7 +92,7 @@
           <!-- Lista dinámica de familias -->
           <div
             *ngFor="let familia of familias"
-            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center"
+            class="bg-gray-200 p-4 rounded-lg shadow-sm hover:shadow-md hover:ring-2 hover:ring-orange-600 transition duration-150 cursor-pointer text-center product-item fade-in-up"
             [ngClass]="{
               'bg-orange-100 ring-2 ring-orange-600': familiaSeleccionada === familia.id,
               'bg-gray-200': familiaSeleccionada !== familia.id
@@ -135,12 +135,12 @@
           <!-- Lista de productos -->
           <ng-container *ngIf="!isLoading && !errorMessage">
             <ng-container *ngIf="productosData$ | async as productosData">
-             <div class="flex-grow overflow-y-auto md:h-[calc(100vh-12rem)] lg:h-[calc(100vh-12rem)] p-4 sm:p-6">
+             <div class="flex-grow overflow-y-auto h-[calc(100vh-20rem)] md:h-[calc(100vh-12rem)] lg:h-[calc(100vh-12rem)] p-4 sm:p-6 mobile-scroll-container product-list-mobile">
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-6 pb-4 product-grid">
 
         <div *ngFor="let product of productosData; let i = index"
-            class="bg-white border border-gray-200 rounded-xl shadow-lg transition duration-200 flex flex-col overflow-hidden cursor-pointer"
+            class="bg-white border border-gray-200 rounded-xl shadow-lg transition duration-200 flex flex-col overflow-hidden cursor-pointer product-item fade-in-up"
 
             [ngClass]="{
                 'hover:shadow-xl': product.stock > 0,
@@ -227,7 +227,7 @@
         </button>
       </div>
 
-      <div class="space-y-4 flex-grow overflow-y-auto md:h-[calc(100vh-16rem)] lg:h-[calc(100vh-16rem)]">
+      <div class="space-y-4 flex-grow overflow-y-auto h-[calc(100vh-25rem)] md:h-[calc(100vh-16rem)] lg:h-[calc(100vh-16rem)] mobile-scroll-container cart-modal-content">
 
         <!-- Mensaje cuando el carrito está vacío -->
         <div *ngIf="cartItems.length === 0" class="text-center py-8">
@@ -350,7 +350,7 @@
     </button>
   </div>
 
-  <div class="p-4 space-y-3 overflow-y-auto flex-grow  ">
+  <div class="p-4 space-y-3 overflow-y-auto flex-grow mobile-scroll-container cart-modal-content">
 
     <!-- Mensaje cuando el carrito está vacío (móvil) -->
     <div *ngIf="cartItems.length === 0" class="text-center py-8">
