@@ -1,6 +1,6 @@
 # 🚀 Despliegue en Vercel - Lizvi EIRL
 
-## Configuración rápida
+## Configuración rápida - Variables de entorno configuradas ✅
 
 ### 1. **Conectar repositorio a Vercel:**
 - Ve a [vercel.com](https://vercel.com)
