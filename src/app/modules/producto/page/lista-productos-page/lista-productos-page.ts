@@ -233,6 +233,6 @@ export class ListaProductosPage {
   }
 
   volverCatalogos(): void {
-    this.router.navigate(['/configuracion']);
+    this.router.navigate(['/configuraciones']);
   }
 }

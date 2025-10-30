@@ -97,6 +97,6 @@ export class ListaClientesPage implements OnInit {
 
   // Método para el botón de Volver
   volverCatalogos(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 }

@@ -199,9 +199,9 @@ export class RegistroUsuariosPage implements OnInit {
   }
 
   /**
-   * Volver a la página anterior
+   * Volver a la lista de usuarios
    */
   volverAtras(): void {
-    this.location.back();
+    this.router.navigate(['/usuarios/lista']);
   }
 }

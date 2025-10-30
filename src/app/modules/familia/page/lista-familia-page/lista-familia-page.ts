@@ -82,7 +82,7 @@ export class ListaFamiliaPage implements OnInit {
    * Volver a la página anterior
    */
   volverInicio(): void {
-    this.location.back();
+    this.router.navigate(['/inicio']);
   }
 
   // Método para el botón principal "Nueva Familia"
@@ -104,6 +104,6 @@ export class ListaFamiliaPage implements OnInit {
 
   // Método para el botón de Volver
   volverConfiguraciones(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 }

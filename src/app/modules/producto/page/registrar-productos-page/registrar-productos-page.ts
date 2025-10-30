@@ -167,7 +167,7 @@ export class RegistrarProductosPage implements OnInit {
 
   // Método para el botón de Volver al listado de productos
   volverCatalogos(): void {
-    this.location.back();
+    this.router.navigate(['/lista-productos']);
   }
 
   // Métodos para cargar datos de catálogos
@@ -279,7 +279,7 @@ export class RegistrarProductosPage implements OnInit {
   // Métodos para el modal de éxito
   cerrarModalYVolver(): void {
     this.showSuccessModal = false;
-    this.location.back();
+    this.router.navigate(['/lista-productos']);
   }
 
   cerrarModal(): void {

@@ -147,9 +147,9 @@ export class RegistroRolesPage {
   }
 
   /**
-   * Volver a la página anterior
+   * Volver a la lista de roles
    */
   volverAtras(): void {
-    this.location.back();
+    this.router.navigate(['/lista-roles']);
   }
 }

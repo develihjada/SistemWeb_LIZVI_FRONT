@@ -83,7 +83,7 @@ export class ListaUsuariosPage implements OnInit {
    * Volver a la página anterior
    */
   volverInicio(): void {
-    this.location.back();
+    this.router.navigate(['/inicio']);
   }
 
   // Método para el botón principal "Nuevo Usuario"
@@ -105,7 +105,7 @@ export class ListaUsuariosPage implements OnInit {
 
   // Método para el botón de Volver
   volverConfiguraciones(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 
   // TrackBy function para mejorar el rendimiento

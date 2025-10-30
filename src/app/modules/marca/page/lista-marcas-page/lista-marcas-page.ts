@@ -1,5 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MarcasService } from '../../../../core/services/marcas/marcas-service';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
 import { MarcaModel } from '../../../../core/models/marca/marca.model';
@@ -15,6 +16,7 @@ import { ResponseListaMarcas } from '../../../../core/models/marca/response/list
 export class ListaMarcasPage implements OnInit {
 
   private location: Location;
+  private router: Router;
   private api: MarcasService;
 
   isLoading: boolean = false;
@@ -25,6 +27,7 @@ export class ListaMarcasPage implements OnInit {
 
   constructor() {
     this.location = inject(Location);
+    this.router = inject(Router);
     this.api = inject(MarcasService);
   }
 
@@ -80,7 +83,7 @@ export class ListaMarcasPage implements OnInit {
    * Volver a la página anterior
    */
   volverInicio(): void {
-    this.location.back();
+    this.router.navigate(['/inicio']);
   }
 
   // Método para el botón principal "Nueva Marca"
@@ -102,6 +105,6 @@ export class ListaMarcasPage implements OnInit {
 
   // Método para el botón de Volver
   volverConfiguraciones(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 }

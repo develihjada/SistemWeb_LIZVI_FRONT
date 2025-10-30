@@ -79,6 +79,6 @@ export class EditarClientesPage implements OnInit {
   }
 
   volverCatalogos(): void {
-    this.location.back();
+    this.router.navigate(['/lista-clientes']);
   }
 }

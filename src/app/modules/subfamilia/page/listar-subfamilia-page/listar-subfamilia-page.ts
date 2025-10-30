@@ -100,7 +100,7 @@ export class ListarSubfamiliaPage implements OnInit {
    * Volver a la página anterior
    */
   volverInicio(): void {
-    this.location.back();
+    this.router.navigate(['/inicio']);
   }
 
   // Método para el botón principal "Nueva Subfamilia"
@@ -153,6 +153,6 @@ export class ListarSubfamiliaPage implements OnInit {
 
   // Método para el botón de Volver
   volverConfiguraciones(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 }

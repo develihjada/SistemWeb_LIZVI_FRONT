@@ -83,7 +83,7 @@ export class ListaUnidadesMedidaPage implements OnInit {
    * Volver a la página anterior
    */
   volverInicio(): void {
-    this.location.back();
+    this.router.navigate(['/inicio']);
   }
 
   // Método para el botón principal "Nueva Unidad de Medida"
@@ -105,6 +105,6 @@ export class ListaUnidadesMedidaPage implements OnInit {
 
   // Método para el botón de Volver
   volverConfiguraciones(): void {
-    this.location.back();
+    this.router.navigate(['/configuraciones']);
   }
 }

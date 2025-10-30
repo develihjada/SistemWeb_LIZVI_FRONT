@@ -55,6 +55,6 @@ export class RegistrarClientesPage {
   }
 
   volverCatalogos(): void {
-    this.location.back();
+    this.router.navigate(['/lista-clientes']);
   }
 }
