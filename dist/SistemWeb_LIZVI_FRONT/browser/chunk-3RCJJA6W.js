@@ -1,0 +1,1 @@
+import{Fa as i,Xa as t,Ya as m,jb as n}from"./chunk-NRNLENJO.js";var o=class e{static \u0275fac=function(a){return new(a||e)};static \u0275cmp=i({type:e,selectors:[["app-editar-familia-page"]],decls:2,vars:0,template:function(a,p){a&1&&(t(0,"p"),n(1,"editar-familia-page works!"),m())},encapsulation:2})};export{o as EditarFamiliaPage};
