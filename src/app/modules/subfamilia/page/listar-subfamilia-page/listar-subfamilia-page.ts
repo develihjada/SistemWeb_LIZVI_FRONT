@@ -1,5 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SubfamiliasService } from '../../../../core/services/subfamilias/subfamilias-service';
 import { FamiliasService } from '../../../../core/services/familias/familias-service';
@@ -19,6 +20,7 @@ import { ResponseListaFamilias } from '../../../../core/models/familia/response/
 export class ListarSubfamiliaPage implements OnInit {
 
   private location: Location;
+  private router: Router;
   private api: SubfamiliasService;
   private familiasApi: FamiliasService;
 
@@ -37,6 +39,7 @@ export class ListarSubfamiliaPage implements OnInit {
 
   constructor() {
     this.location = inject(Location);
+    this.router = inject(Router);
     this.api = inject(SubfamiliasService);
     this.familiasApi = inject(FamiliasService);
   }
@@ -102,12 +105,12 @@ export class ListarSubfamiliaPage implements OnInit {
 
   // Método para el botón principal "Nueva Subfamilia"
   registrarSubfamilia(): void {
-    // TODO: Implementar navegación al formulario de registro
+    this.router.navigate(['/registro-subfamilia']);
   }
 
   // Método para la acción de Editar en la tabla
   editarSubfamilia(id: number): void {
-    // TODO: Implementar navegación al formulario de edición
+    this.router.navigate(['/editar-subfamilia', id]);
   }
 
   // Método para la acción de Eliminar en la tabla

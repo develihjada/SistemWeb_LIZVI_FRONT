@@ -3,6 +3,8 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { RequestListaUnidadesMedidaModel } from '../../models/unidadMedida/request/listaUnidadesMedida.request';
 import { ResponseListaUnidadesMedida } from '../../models/unidadMedida/response/listaUnidadesMedida.response';
+import { UnidadMedidaModel } from '../../models/unidadMedida/unidadmedida.model';
+import { ResponseGeneral } from '../../../shared/model/general.response';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -19,5 +21,11 @@ export class UnidadesMedidaService {
     });
   }
 
-  constructor(private http: HttpClient) {}
+  registroUnidadMedida(req: UnidadMedidaModel): Observable<ResponseGeneral> {
+    const fullUrl = `${this.url}/UnidadMedida/Registrar`;
+
+    return this.http.post<ResponseGeneral>(fullUrl, req, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }  constructor(private http: HttpClient) {}
 }

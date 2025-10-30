@@ -8,5 +8,13 @@ export const UNIDADMEDIDA_ROUTES: Routes = [
         (m) => m.ListaUnidadesMedidaPage
       ),
     title: 'Unidades de Medida'
+  },
+  {
+    path: 'registro-unidad-medida',
+    loadComponent: () =>
+      import('./page/registro-unidad-medida-page/registro-unidad-medida-page').then(
+        (m) => m.RegistroUnidadMedidaPage
+      ),
+    title: 'Registrar Unidad de Medida'
   }
 ];

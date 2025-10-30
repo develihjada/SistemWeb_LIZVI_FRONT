@@ -1,0 +1,1 @@
+import{Fa as i,Xa as t,Ya as m,jb as s}from"./chunk-NRNLENJO.js";var n=class e{static \u0275fac=function(a){return new(a||e)};static \u0275cmp=i({type:e,selectors:[["app-editar-subfamilia-page"]],decls:2,vars:0,template:function(a,l){a&1&&(t(0,"p"),s(1,"editar-subfamilia-page works!"),m())},encapsulation:2})};export{n as EditarSubfamiliaPage};

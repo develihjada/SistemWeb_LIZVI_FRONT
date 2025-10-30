@@ -1,0 +1,141 @@
+/* Estilos específicos para registro de unidades de medida */
+
+/* Animaciones */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Estilos para móvil */
+@media (max-width: 640px) {
+
+  /* Ajustes de padding y espaciado en móvil */
+  .mobile-padding {
+    padding: 0.75rem;
+  }
+
+  /* Botones más grandes en móvil para mejor usabilidad */
+  .mobile-touch-target {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+
+  /* Formulario responsive */
+  .mobile-form-spacing {
+    gap: 1rem;
+  }
+
+  /* Input más grandes en móvil */
+  input[type="text"],
+  select,
+  textarea {
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+}
+
+/* Estados de validación */
+.form-field.valid input {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.form-field.invalid input {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Contador de caracteres */
+.character-counter.warning {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.character-counter.danger {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Botón de estado loading */
+.btn-loading {
+  position: relative;
+}
+
+.btn-loading:disabled {
+  cursor: not-allowed;
+}
+
+/* Mejoras de accesibilidad */
+.focus-visible:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Transiciones suaves */
+.smooth-transition {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Container principal con scroll suave */
+.main-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Sombras y elevación */
+.card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Gradientes personalizados */
+.gradient-header {
+  background: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+/* Estados hover mejorados */
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Loading state específico */
+.loading-overlay {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* Estilos para el modal */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive text scaling */
+@media (min-width: 768px) {
+  .responsive-text {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .responsive-text {
+    font-size: 0.875rem;
+  }
+}

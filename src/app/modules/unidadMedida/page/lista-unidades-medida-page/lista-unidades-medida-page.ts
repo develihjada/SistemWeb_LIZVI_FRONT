@@ -1,5 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UnidadesMedidaService } from '../../../../core/services/unidadesMedida/unidades-medida-service';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
 import { UnidadMedidaModel } from '../../../../core/models/unidadMedida/unidadmedida.model';
@@ -15,6 +16,7 @@ import { ResponseListaUnidadesMedida } from '../../../../core/models/unidadMedid
 export class ListaUnidadesMedidaPage implements OnInit {
 
   private location: Location;
+  private router: Router;
   private api: UnidadesMedidaService;
 
   isLoading: boolean = false;
@@ -25,6 +27,7 @@ export class ListaUnidadesMedidaPage implements OnInit {
 
   constructor() {
     this.location = inject(Location);
+    this.router = inject(Router);
     this.api = inject(UnidadesMedidaService);
   }
 
@@ -85,7 +88,7 @@ export class ListaUnidadesMedidaPage implements OnInit {
 
   // Método para el botón principal "Nueva Unidad de Medida"
   registrarUnidadMedida(): void {
-    // TODO: Implementar navegación al formulario de registro
+    this.router.navigate(['/registro-unidad-medida']);
   }
 
   // Método para la acción de Editar en la tabla

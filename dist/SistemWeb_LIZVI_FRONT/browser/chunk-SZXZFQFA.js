@@ -1,0 +1,1 @@
+import{Fa as t,Xa as l,Ya as i,jb as m}from"./chunk-NRNLENJO.js";var s=class a{static \u0275fac=function(e){return new(e||a)};static \u0275cmp=t({type:a,selectors:[["app-detalle-subfamilia-page"]],decls:2,vars:0,template:function(e,o){e&1&&(l(0,"p"),m(1,"detalle-subfamilia-page works!"),i())},encapsulation:2})};export{s as DetalleSubfamiliaPage};

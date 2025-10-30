@@ -1,1 +1,306 @@
-<p>registrar-subfamilia-page works!</p>
+<!-- Contenedor principal optimizado para móvil -->
+<div class="flex flex-col min-h-screen bg-white p-2 sm:p-4 md:p-8">
+
+    <!-- Header optimizado -->
+    <div class="flex items-center justify-between pb-4 md:pb-6 border-b border-gray-300 flex-none">
+        <div class="flex items-center gap-2 md:gap-4">
+            <button (click)="volverCatalogos()" class="bg-orange-600 text-white rounded-full p-2 h-8 w-8 md:h-10 md:w-10 flex items-center justify-center hover:bg-orange-700 transition shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 md:w-5 md:h-5">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M5 12l14 0" />
+                    <path d="M5 12l4 4" />
+                    <path d="M5 12l4 -4" />
+                </svg>
+            </button>
+            <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold text-gray-900">
+                <span class="hidden sm:inline">🏷️ Registrar Nueva Subfamilia</span>
+                <span class="sm:hidden">Nueva Subfamilia</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Mensajes de error y éxito -->
+    <div *ngIf="errorMessage" class="mt-4 md:mt-6 p-4 bg-red-100 border border-red-300 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-red-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-red-800 font-medium text-sm md:text-base">{{ errorMessage }}</p>
+        </div>
+    </div>
+
+    <div *ngIf="successMessage" class="mt-4 md:mt-6 p-4 bg-green-100 border border-green-300 rounded-lg shadow-sm">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 text-green-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-green-800 font-medium text-sm md:text-base">{{ successMessage }}</p>
+        </div>
+    </div>
+
+    <!-- Formulario principal -->
+    <form (ngSubmit)="guardarSubfamilia()" #subfamiliaForm="ngForm" class="mt-4 md:mt-8 space-y-4 md:space-y-8 bg-gray-50 p-3 md:p-8 rounded-xl shadow-2xl">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
+
+            <!-- Sección de información principal -->
+            <div class="lg:col-span-4 flex flex-col space-y-4 md:space-y-6 p-3 md:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg border-l-4 border-blue-600">
+
+                <h2 class="text-lg md:text-xl font-extrabold text-blue-600 border-b-2 border-blue-300 pb-2 w-full text-center lg:text-left">
+                    🏷️ Información de la Subfamilia
+                </h2>
+
+                <!-- Icono decorativo -->
+                <div class="flex justify-center lg:justify-start">
+                    <div class="relative h-20 w-20 md:h-32 md:w-32 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg subfamily-icon">
+                        <svg class="w-10 h-10 md:w-16 md:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <div class="flex items-start">
+                        <svg class="w-4 h-4 md:w-5 md:h-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <p class="text-amber-800 text-xs md:text-sm font-medium">
+                                <strong>¿Qué es una subfamilia?</strong>
+                            </p>
+                            <p class="text-amber-700 text-xs md:text-sm mt-1">
+                                Las subfamilias son divisiones más específicas dentro de cada familia de productos, permitiendo una clasificación más detallada.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Sección de formulario -->
+            <div class="lg:col-span-8 space-y-4 md:space-y-6">
+
+                <!-- Datos básicos -->
+                <div class="bg-white p-3 md:p-6 rounded-lg border border-gray-200 shadow-sm">
+                    <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-3 md:mb-6 pb-2 md:pb-3 border-b border-blue-100">
+                        ✏️ Datos de la Subfamilia
+                    </h2>
+
+                    <div class="space-y-4 md:space-y-6">
+
+                        <!-- Selección de Familia -->
+                        <div>
+                            <label for="idFamilia" class="block text-xs md:text-sm font-bold text-gray-700 mb-2">
+                                Familia Principal <span class="text-red-500">*</span>
+                            </label>
+
+                            <!-- Loading de familias -->
+                            <div *ngIf="isLoadingFamilias" class="flex items-center p-3 bg-gray-50 border border-gray-300 rounded-xl">
+                                <svg class="animate-spin w-4 h-4 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span class="text-gray-600 text-sm">Cargando familias...</span>
+                            </div>
+
+                            <!-- Contenedor del select y validaciones -->
+                            <div *ngIf="!isLoadingFamilias">
+                                <!-- Select de familias -->
+                                <select
+                                    id="idFamilia"
+                                    name="idFamilia"
+                                    [(ngModel)]="newSubfamilia.idFamilia"
+                                    required
+                                    class="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200 text-sm md:text-base"
+                                    #familiaSelect="ngModel">
+                                    <option [ngValue]="0" disabled>-- Seleccione una Familia --</option>
+                                    <option *ngFor="let familia of familias" [ngValue]="familia.id">
+                                        {{ familia.descripcion }}
+                                    </option>
+                                </select>
+
+                                <!-- Validaciones de familia -->
+                                <div class="mt-2">
+                                    <span *ngIf="familiaSelect.errors?.['required'] && familiaSelect.touched" class="text-red-500 text-xs font-medium">
+                                        ⚠️ Debe seleccionar una familia
+                                    </span>
+                                    <span *ngIf="familias.length === 0" class="text-amber-600 text-xs font-medium">
+                                        ⚠️ No hay familias disponibles. Debe crear una familia primero.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Mensaje cuando no hay familias pero no está cargando -->
+                            <div *ngIf="!isLoadingFamilias && familias.length === 0" class="mt-2">
+                                <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <p class="text-amber-800 text-sm font-medium">
+                                        ⚠️ No hay familias disponibles. Debe crear una familia primero.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div>
+                            <label for="descripcion" class="block text-xs md:text-sm font-bold text-gray-700 mb-2">
+                                Nombre de la Subfamilia <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="descripcion"
+                                name="descripcion"
+                                [(ngModel)]="newSubfamilia.descripcion"
+                                required
+                                minlength="3"
+                                maxlength="100"
+                                placeholder="Ej: Laptops, Celulares, Tablets, Audífonos..."
+                                class="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm md:text-base"
+                                #descripcionInput="ngModel">
+
+                            <!-- Contador de caracteres y validaciones -->
+                            <div class="flex justify-between mt-2">
+                                <div class="text-xs">
+                                    <span *ngIf="descripcionInput.errors?.['required'] && descripcionInput.touched" class="text-red-500 font-medium">
+                                        ⚠️ Este campo es obligatorio
+                                    </span>
+                                    <span *ngIf="descripcionInput.errors?.['minlength'] && descripcionInput.touched" class="text-red-500 font-medium">
+                                        ⚠️ Mínimo 3 caracteres
+                                    </span>
+                                    <span *ngIf="descripcionInput.errors?.['maxlength']" class="text-red-500 font-medium">
+                                        ⚠️ Máximo 100 caracteres
+                                    </span>
+                                    <span *ngIf="descripcionInput.valid && descripcionInput.touched" class="text-green-500 font-medium">
+                                        ✅ Válido
+                                    </span>
+                                </div>
+                                <span class="text-xs character-counter"
+                                      [class.warning]="(newSubfamilia.descripcion || '').length > 80"
+                                      [class.danger]="(newSubfamilia.descripcion || '').length > 95"
+                                      [class.text-gray-400]="(newSubfamilia.descripcion || '').length <= 80">
+                                    {{ (newSubfamilia.descripcion || '').length }}/100
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div>
+                            <label for="estado" class="block text-xs md:text-sm font-bold text-gray-700 mb-2">
+                                Estado de la Subfamilia
+                            </label>
+                            <select
+                                id="estado"
+                                name="estado"
+                                [(ngModel)]="newSubfamilia.estado"
+                                class="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200 text-sm md:text-base">
+                                <option [ngValue]="1">✅ Activo</option>
+                                <option [ngValue]="0">❌ Inactivo</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Solo las subfamilias activas aparecerán disponibles para asignar a productos
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Sección de botones completamente responsive -->
+        <div class="pt-4 md:pt-6 border-t border-gray-200 space-y-3 md:space-y-0">
+
+            <!-- Botón limpiar formulario visible solo en desktop -->
+            <div class="hidden md:flex md:justify-start">
+                <button type="button" (click)="limpiarFormulario()" [disabled]="isLoading"
+                        class="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm">
+                    🗑️ Limpiar Formulario
+                </button>
+            </div>
+
+            <!-- Botones principales - Layout móvil optimizado -->
+            <div class="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4 md:justify-end">
+
+                <!-- Botón Cancelar -->
+                <button type="button" (click)="cancelarRegistro()" [disabled]="isLoading"
+                        class="mobile-button form-button w-full md:w-auto order-2 md:order-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 desktop-hover transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-base md:text-sm min-h-[48px] md:min-h-[44px] focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+                        [class.invalid]="isLoading">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6m0 12L6 6"></path>
+                        </svg>
+                        <span class="truncate">Cancelar</span>
+                    </span>
+                </button>
+
+                <!-- Botón Guardar Subfamilia -->
+                <button type="submit" [disabled]="!subfamiliaForm.valid || isLoading"
+                        class="mobile-button form-button loading-button w-full md:w-auto order-1 md:order-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 desktop-hover transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl text-base md:text-sm min-h-[48px] md:min-h-[44px] focus:ring-2 focus:ring-blue-300 focus:ring-offset-2"
+                        [class.invalid]="!subfamiliaForm.valid && !isLoading"
+                        [class.valid]="subfamiliaForm.valid && !isLoading"
+                        [class.is-loading]="isLoading">
+                    <span class="flex items-center justify-center">
+                        <!-- Icono de carga -->
+                        <svg *ngIf="isLoading" class="animate-spin w-5 h-5 mr-2 text-white flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <!-- Icono normal -->
+                        <svg *ngIf="!isLoading" class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                        </svg>
+                        <span class="truncate">{{ isLoading ? 'Guardando...' : 'Guardar Subfamilia' }}</span>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Botón limpiar en móvil (como enlace secundario) -->
+            <div class="md:hidden flex justify-center">
+                <button type="button" (click)="limpiarFormulario()" [disabled]="isLoading"
+                        class="text-gray-500 hover:text-gray-700 font-medium text-sm underline disabled:opacity-50">
+                    🗑️ Limpiar formulario
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de Éxito optimizado para móvil -->
+<div *ngIf="showSuccessModal" class="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="cerrarModal()">
+    <div class="bg-white rounded-xl shadow-2xl p-4 md:p-8 max-w-md w-full mx-auto transform transition-all duration-300" (click)="$event.stopPropagation()">
+
+        <!-- Icono de éxito -->
+        <div class="flex justify-center mb-4 md:mb-6">
+            <div class="bg-green-100 rounded-full p-3 md:p-4">
+                <svg class="w-8 h-8 md:w-12 md:h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Título -->
+        <h2 class="text-xl md:text-2xl font-bold text-gray-900 text-center mb-3 md:mb-4">
+            ✅ ¡Subfamilia Registrada!
+        </h2>
+
+        <!-- Mensaje -->
+        <p class="text-gray-600 text-center mb-6 md:mb-8 leading-relaxed text-sm md:text-base">
+            {{ modalMessage }}
+        </p>
+
+        <!-- Botones optimizados para móvil -->
+        <div class="flex flex-col gap-2 md:flex-row md:gap-3">
+            <button (click)="cerrarModal()"
+                    class="w-full px-4 md:px-6 py-2.5 md:py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-150 text-sm">
+                ➕ Registrar Otra
+            </button>
+            <button (click)="cerrarModalYVolver()"
+                    class="w-full px-4 md:px-6 py-2.5 md:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-150 flex items-center justify-center text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                📋 Ver Lista
+            </button>
+        </div>
+    </div>
+</div>
