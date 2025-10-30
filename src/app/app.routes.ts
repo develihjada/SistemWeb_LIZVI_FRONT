@@ -11,6 +11,7 @@ import { CLIENTES_ROUTES } from './modules/cliente/cliente.routes';
 import { UNIDADMEDIDA_ROUTES } from './modules/unidadMedida/unidadMedida.routes';
 import { MARCA_ROUTES } from './modules/marca/marca.routes';
 import { rolesRoutes } from './modules/roles/roles.routes';
+import { usuariosRoutes } from './modules/usuarios/usuarios.routes';
 
 export const routes: Routes = [
   // Redirección por defecto a login
@@ -31,6 +32,10 @@ export const routes: Routes = [
   ...UNIDADMEDIDA_ROUTES,
   ...MARCA_ROUTES,
   ...rolesRoutes,
+  {
+    path: 'usuarios',
+    children: usuariosRoutes
+  },
   {
     path: '**',
     redirectTo: '/login'

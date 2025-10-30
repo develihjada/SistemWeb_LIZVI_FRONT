@@ -1,0 +1,15 @@
+/* Estilos específicos para la página de registro de usuarios si son necesarios */
+/* Los estilos principales se manejan con Tailwind CSS en el HTML */
+
+.family-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

@@ -49,6 +49,9 @@ export class ListaConfiguracionesPage {
       case 'roles':
         this.router.navigate(['/lista-roles']);
         break;
+      case 'gestion-usuarios':
+        this.router.navigate(['/usuarios/lista']);
+        break;
       default:
         this.router.navigate([`/${module}`]);
         break;
