@@ -1,5 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FamiliasService } from '../../../../core/services/familias/familias-service';
 import { BehaviorSubject, catchError, map, Observable, of, timeout } from 'rxjs';
 import { FamiliaModel } from '../../../../core/models/familia/familia.model';
@@ -15,6 +16,7 @@ import { ResponseListaFamilias } from '../../../../core/models/familia/response/
 export class ListaFamiliaPage implements OnInit {
 
   private location: Location;
+  private router: Router;
   private api: FamiliasService;
 
   isLoading: boolean = false;
@@ -25,6 +27,7 @@ export class ListaFamiliaPage implements OnInit {
 
   constructor() {
     this.location = inject(Location);
+    this.router = inject(Router);
     this.api = inject(FamiliasService);
   }
 
@@ -84,12 +87,12 @@ export class ListaFamiliaPage implements OnInit {
 
   // Método para el botón principal "Nueva Familia"
   registrarFamilia(): void {
-    // TODO: Implementar navegación al formulario de registro
+    this.router.navigate(['/registro-familia']);
   }
 
   // Método para la acción de Editar en la tabla
   editarFamilia(id: number): void {
-    // TODO: Implementar navegación al formulario de edición
+    this.router.navigate(['/editar-familia', id]);
   }
 
   // Método para la acción de Eliminar en la tabla

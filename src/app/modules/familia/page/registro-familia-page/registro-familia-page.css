@@ -1,0 +1,148 @@
+/* Estilos específicos para registro de familia - Móvil optimizado */
+
+/* Botones base responsive */
+.mobile-button {
+  position: relative;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Estilos móviles específicos */
+@media (max-width: 768px) {
+
+  /* Botones táctiles optimizados */
+  .mobile-button {
+    min-height: 48px;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+  }
+
+  /* Animaciones de feedback táctil */
+  .mobile-button:active:not(:disabled) {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Espaciado mejorado entre botones */
+  .button-container {
+    padding: 16px 0;
+    gap: 12px;
+  }
+
+  /* Prevenir zoom en inputs en iOS Safari */
+  input, select, textarea {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Mejorar contraste en botones deshabilitados */
+  button:disabled {
+    opacity: 0.6;
+    filter: grayscale(0.3);
+    pointer-events: none;
+  }
+
+  /* Botones en pantallas muy pequeñas */
+  @media (max-width: 375px) {
+    .mobile-button {
+      font-size: 14px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+}
+
+/* Estilos para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-button {
+    min-height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* Efectos hover mejorados para desktop */
+@media (min-width: 769px) {
+  .desktop-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animaciones suaves para loading states */
+.loading-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.loading-button.is-loading::before {
+  left: 100%;
+}
+
+/* Mejoras para accesibilidad */
+.form-button:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Estados de validación visual */
+.form-button.invalid {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-button.valid {
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+/* Estilos específicos para el formulario de familia */
+.family-form-gradient {
+  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+}
+
+/* Animación para el icono principal */
+.family-icon {
+  animation: pulse-orange 2s infinite;
+}
+
+@keyframes pulse-orange {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(251, 146, 60, 0);
+  }
+}
+
+/* Mejoras para inputs */
+input:focus, select:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+/* Contador de caracteres */
+.character-counter {
+  transition: color 0.3s ease;
+}
+
+.character-counter.warning {
+  color: #f59e0b;
+}
+
+.character-counter.danger {
+  color: #ef4444;
+}
