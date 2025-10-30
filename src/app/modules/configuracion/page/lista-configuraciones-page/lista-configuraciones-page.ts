@@ -46,6 +46,9 @@ export class ListaConfiguracionesPage {
       case 'lista-marcas':
         this.router.navigate(['/catalogos/marcas']);
         break;
+      case 'roles':
+        this.router.navigate(['/lista-roles']);
+        break;
       default:
         this.router.navigate([`/${module}`]);
         break;
